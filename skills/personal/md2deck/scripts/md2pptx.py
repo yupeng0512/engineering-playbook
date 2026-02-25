@@ -568,9 +568,10 @@ def _is_core_subsection(title: str, module_title: str) -> bool:
         '核心痛点',
         '核心功能',
         '收入模型',
-        '竞品矩阵',
+        '竞品矩阵', '竞争优势',
         '三年收入',
         '融资计划',
+        '冷启动', '增长渠道',
     ]
     return any(kw in title for kw in core_sub_keywords)
 
@@ -737,6 +738,20 @@ def convert(input_path, output_path, style='professional',
                     for header, data in split_table(sub['table_rows']):
                         add_table_slide(prs, sub['title'], header, data, C)
             continue
+
+        # compact 模式：预检查 — 如果模块内所有子章节都会被过滤掉，
+        # 则整个模块（含过渡页）都不生成，避免出现空模块
+        if compact:
+            has_visible_sub = False
+            for sub in subs:
+                if not sub['title'] or _is_core_subsection(sub['title'], title):
+                    # 还需要检查该子章节是否真有内容
+                    if (sub['table_rows'] or sub['bullets'] or
+                            sub['quotes'] or sub['text_lines']):
+                        has_visible_sub = True
+                        break
+            if not has_visible_sub:
+                continue
 
         # 非封面模块 → 先加章节过渡页
         add_section_slide(prs, title, C)
