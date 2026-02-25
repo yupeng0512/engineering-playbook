@@ -91,6 +91,18 @@
 
 ---
 
+## 风格主题（三套可选）
+
+| 风格 | CSS 文件 | python-pptx `--style` | 视觉特征 |
+|------|---------|----------------------|---------|
+| **Professional**（默认） | `themes/pitch-deck.css` | `professional` | 深蓝商务底色 + 渐变强调色 + 精致表格阴影 |
+| **Minimal** | `themes/minimal.css` | `minimal` | 大量留白 + 纯黑白灰 + 橙色点缀 + 极简线条 |
+| **Modern** | `themes/modern.css` | `modern` | 深色背景 + 紫蓝渐变 + 科技感光晕效果 |
+
+三套风格共享同一套 Slide 类型（cover / section / title-bullets / data-table / comparison / quote / cta），仅配色和视觉风格不同。
+
+---
+
 ## 渲染引擎 A：Marp（视觉优先）
 
 ### 安装
@@ -104,13 +116,19 @@ brew install marp-cli
 ### 使用
 
 ```bash
-# 生成 HTML（演示用）
+# Professional 风格
 marp slides.md --theme ./themes/pitch-deck.css --html --output slides.html
 
-# 生成 PDF
+# Minimal 风格
+marp slides.md --theme ./themes/minimal.css --html --output slides.html
+
+# Modern 风格
+marp slides.md --theme ./themes/modern.css --html --output slides.html
+
+# 导出 PDF
 marp slides.md --theme ./themes/pitch-deck.css --pdf --output slides.pdf
 
-# 生成 PPTX（注意：为图片嵌入，不可编辑）
+# 导出 PPTX（注意：图片嵌入，不可编辑）
 marp slides.md --theme ./themes/pitch-deck.css --pptx --output slides.pptx
 ```
 
@@ -160,8 +178,21 @@ pip install python-pptx Pillow
 ```bash
 python scripts/md2pptx.py \
   --input report.md \
-  --template templates/pitch-deck-template.pptx \
-  --output output.pptx
+  --output output.pptx \
+  --style professional   # 或 minimal / modern
+```
+
+### 风格选项
+
+```bash
+# Professional（默认）
+python scripts/md2pptx.py -i report.md -o output.pptx -s professional
+
+# Minimal
+python scripts/md2pptx.py -i report.md -o output.pptx -s minimal
+
+# Modern
+python scripts/md2pptx.py -i report.md -o output.pptx -s modern
 ```
 
 ### 工作原理

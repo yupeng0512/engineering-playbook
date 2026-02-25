@@ -1,7 +1,7 @@
 /*!
  * @theme pitch-deck
- * md2deck — 投研报告 Pitch Deck 主题
- * 基于 Marp default 主题扩展
+ * md2deck — Professional 专业风格（默认主题）
+ * 深蓝商务底色 + 精致排版 + 数据驱动版式
  */
 
 @import 'default';
@@ -11,16 +11,24 @@
    ============================================ */
 
 :root {
-  --color-primary: #1A73E8;
-  --color-primary-dark: #0D47A1;
+  --color-primary: #1565C0;
+  --color-primary-dark: #0A1929;
+  --color-primary-mid: #1E3A5F;
   --color-accent: #FF6D00;
+  --color-accent-light: #FFF3E0;
   --color-bg: #FFFFFF;
-  --color-bg-alt: #F5F7FA;
-  --color-text: #212121;
-  --color-text-secondary: #757575;
-  --color-success: #2E7D32;
-  --color-danger: #C62828;
-  --color-border: #E0E0E0;
+  --color-bg-alt: #F8FAFC;
+  --color-bg-subtle: #EEF2F6;
+  --color-text: #1A202C;
+  --color-text-secondary: #64748B;
+  --color-text-light: #94A3B8;
+  --color-success: #16A34A;
+  --color-danger: #DC2626;
+  --color-border: #E2E8F0;
+  --color-divider: #CBD5E1;
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.08);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.1);
+  --radius: 8px;
 }
 
 /* ============================================
@@ -28,129 +36,172 @@
    ============================================ */
 
 section {
-  font-family: 'Inter', 'Noto Sans SC', 'Source Han Sans SC', sans-serif;
+  font-family: 'Inter', 'Noto Sans SC', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   color: var(--color-text);
   background: var(--color-bg);
-  padding: 60px 80px;
-  font-size: 24px;
-  line-height: 1.6;
+  padding: 56px 72px;
+  font-size: 22px;
+  line-height: 1.7;
+  letter-spacing: 0.01em;
+}
+
+/* 底部装饰条 */
+section::before {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: linear-gradient(90deg, var(--color-primary) 0%, var(--color-accent) 100%);
 }
 
 h1 {
   font-family: 'Inter', 'Noto Sans SC', sans-serif;
-  font-weight: 700;
+  font-weight: 800;
   color: var(--color-primary-dark);
-  font-size: 42px;
-  margin-bottom: 16px;
+  font-size: 38px;
+  margin-bottom: 8px;
   border-bottom: none;
+  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
 h2 {
   font-family: 'Inter', 'Noto Sans SC', sans-serif;
-  font-weight: 600;
+  font-weight: 700;
   color: var(--color-primary);
-  font-size: 32px;
-  margin-bottom: 12px;
+  font-size: 28px;
+  margin-bottom: 8px;
   border-bottom: none;
+  letter-spacing: -0.01em;
 }
 
 h3 {
   font-weight: 600;
-  color: var(--color-text);
-  font-size: 26px;
+  color: var(--color-primary-mid);
+  font-size: 22px;
+  margin-bottom: 8px;
+  padding-bottom: 4px;
+  border-bottom: 2px solid var(--color-accent);
+  display: inline-block;
 }
 
 strong {
   color: var(--color-accent);
+  font-weight: 700;
 }
 
 a {
   color: var(--color-primary);
+  text-decoration: none;
 }
 
-/* Bullet list */
+/* ============================================
+   Bullet Lists — 精致的列表项
+   ============================================ */
+
 ul, ol {
   margin-left: 0;
-  padding-left: 1.2em;
+  padding-left: 1.4em;
 }
 
 li {
-  margin-bottom: 8px;
-  line-height: 1.5;
+  margin-bottom: 10px;
+  line-height: 1.6;
 }
 
 li::marker {
   color: var(--color-primary);
+  font-weight: 700;
 }
 
 /* ============================================
-   Tables
+   Tables — 专业数据表格
    ============================================ */
 
 table {
   width: 100%;
-  border-collapse: collapse;
-  font-size: 20px;
-  margin-top: 16px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 18px;
+  margin-top: 12px;
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: var(--shadow-sm);
 }
 
 th {
-  background: var(--color-primary);
+  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
   color: white;
-  font-weight: 600;
-  padding: 10px 16px;
+  font-weight: 700;
+  padding: 12px 16px;
   text-align: left;
+  font-size: 16px;
+  letter-spacing: 0.02em;
+  text-transform: none;
 }
 
 td {
-  padding: 8px 16px;
+  padding: 10px 16px;
   border-bottom: 1px solid var(--color-border);
+  font-size: 16px;
 }
 
 tr:nth-child(even) td {
   background: var(--color-bg-alt);
 }
 
+tr:last-child td {
+  border-bottom: none;
+}
+
 /* ============================================
-   Blockquote — 核心洞察
+   Blockquote — 核心洞察卡片
    ============================================ */
 
 blockquote {
   border-left: 4px solid var(--color-accent);
-  background: #FFF3E0;
+  background: linear-gradient(135deg, var(--color-accent-light) 0%, #FFFDE7 100%);
   padding: 16px 24px;
-  margin: 20px 0;
+  margin: 16px 0;
   font-style: normal;
-  border-radius: 4px;
+  border-radius: 0 var(--radius) var(--radius) 0;
+  box-shadow: var(--shadow-sm);
 }
 
 blockquote p {
   margin: 0;
   color: var(--color-text);
+  font-size: 18px;
+  line-height: 1.6;
 }
 
 /* ============================================
-   Code blocks — 数据/架构图
+   Code blocks
    ============================================ */
 
 code {
-  font-family: 'JetBrains Mono', 'Roboto Mono', monospace;
-  background: var(--color-bg-alt);
-  padding: 2px 6px;
-  border-radius: 3px;
-  font-size: 0.9em;
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  background: var(--color-bg-subtle);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  color: var(--color-primary);
 }
 
 pre {
   background: var(--color-bg-alt);
   border: 1px solid var(--color-border);
-  border-radius: 8px;
-  padding: 20px;
-  font-size: 18px;
+  border-radius: var(--radius);
+  padding: 20px 24px;
+  font-size: 16px;
+  line-height: 1.5;
+  box-shadow: var(--shadow-sm);
 }
 
 /* ============================================
-   Slide Type: Cover
+   Slide Type: Cover — 深色渐变封面
    ============================================ */
 
 section.cover {
@@ -159,111 +210,233 @@ section.cover {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  background: linear-gradient(145deg, #0A1929 0%, #1565C0 60%, #1E88E5 100%);
   color: white;
+  padding: 80px;
+}
+
+section.cover::before {
+  background: linear-gradient(90deg, var(--color-accent) 0%, #FFB74D 100%);
+  height: 5px;
 }
 
 section.cover h1 {
   color: white;
-  font-size: 52px;
-  margin-bottom: 8px;
+  font-size: 56px;
+  margin-bottom: 12px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 section.cover h2 {
-  color: rgba(255, 255, 255, 0.9);
-  font-size: 28px;
+  color: rgba(255, 255, 255, 0.85);
+  font-size: 26px;
   font-weight: 400;
-  margin-bottom: 24px;
+  margin-bottom: 32px;
+  max-width: 800px;
 }
 
 section.cover strong {
-  color: var(--color-accent);
-  font-size: 24px;
+  display: inline-block;
+  background: linear-gradient(135deg, var(--color-accent), #FFB74D);
+  color: white;
+  padding: 8px 24px;
+  border-radius: 24px;
+  font-size: 22px;
+  margin-top: 8px;
+  box-shadow: 0 4px 16px rgba(255,109,0,0.3);
 }
 
-section.cover p {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 18px;
+section.cover p:last-child {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 16px;
+  margin-top: 40px;
 }
 
 /* ============================================
-   Slide Type: Section (章节过渡)
+   Slide Type: Section — 章节过渡页
    ============================================ */
 
 section.section {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: center;
-  text-align: center;
+  align-items: flex-start;
+  text-align: left;
   background: var(--color-bg-alt);
+  padding-left: 100px;
+}
+
+section.section::before {
+  height: 0;
+}
+
+/* 左侧装饰条 */
+section.section::after {
+  content: '' !important;
+  position: absolute;
+  left: 0;
+  top: 15%;
+  bottom: 15%;
+  width: 6px;
+  background: linear-gradient(180deg, var(--color-primary) 0%, var(--color-accent) 100%);
+  border-radius: 0 3px 3px 0;
 }
 
 section.section h1 {
   font-size: 48px;
   color: var(--color-primary-dark);
+  margin-bottom: 16px;
 }
 
 section.section h2 {
   color: var(--color-text-secondary);
-  font-size: 24px;
+  font-size: 22px;
   font-weight: 400;
+  border-bottom: none;
 }
 
 /* ============================================
-   Slide Type: Title + Bullets
+   Slide Type: Title + Bullets — 要点页
    ============================================ */
 
+section.title-bullets {
+  padding-top: 48px;
+}
+
 section.title-bullets h1 {
-  font-size: 36px;
+  font-size: 34px;
   margin-bottom: 24px;
+  padding-bottom: 12px;
+  border-bottom: 3px solid var(--color-accent);
+  display: inline-block;
 }
 
 section.title-bullets ul {
-  font-size: 22px;
+  font-size: 20px;
+  columns: 1;
 }
 
 section.title-bullets li {
-  margin-bottom: 12px;
+  margin-bottom: 14px;
+  padding-left: 8px;
+  position: relative;
 }
 
 /* ============================================
-   Slide Type: Data Table
+   Slide Type: Two-Column — 双栏布局
    ============================================ */
 
-section.data-table h1 {
-  font-size: 34px;
-  margin-bottom: 20px;
+section.two-col {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 0 48px;
+  padding-top: 48px;
 }
 
-section.data-table table {
-  font-size: 18px;
-}
-
-/* ============================================
-   Slide Type: Comparison (竞品对比)
-   ============================================ */
-
-section.comparison h1 {
+section.two-col h1 {
+  grid-column: 1 / -1;
   font-size: 34px;
   margin-bottom: 16px;
 }
 
-section.comparison table {
-  font-size: 16px;
-}
-
-section.comparison th {
-  font-size: 15px;
-  padding: 8px 12px;
-}
-
-section.comparison td {
-  padding: 6px 12px;
+section.two-col h3 {
+  margin-top: 0;
 }
 
 /* ============================================
-   Slide Type: Quote (核心洞察)
+   Slide Type: Data Table — 数据表格页
+   ============================================ */
+
+section.data-table {
+  padding-top: 48px;
+}
+
+section.data-table h1 {
+  font-size: 32px;
+  margin-bottom: 16px;
+}
+
+section.data-table table {
+  font-size: 17px;
+}
+
+section.data-table th {
+  font-size: 15px;
+}
+
+/* ============================================
+   Slide Type: Comparison — 竞品对比
+   ============================================ */
+
+section.comparison {
+  padding-top: 48px;
+}
+
+section.comparison h1 {
+  font-size: 32px;
+  margin-bottom: 12px;
+}
+
+section.comparison table {
+  font-size: 15px;
+}
+
+section.comparison th {
+  font-size: 14px;
+  padding: 10px 12px;
+}
+
+section.comparison td {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+
+/* ============================================
+   Slide Type: Metric Cards — 关键指标卡片
+   ============================================ */
+
+section.metrics {
+  padding-top: 48px;
+}
+
+section.metrics h1 {
+  font-size: 32px;
+  margin-bottom: 24px;
+}
+
+section.metrics table {
+  border: none;
+  box-shadow: none;
+}
+
+section.metrics th {
+  background: transparent;
+  color: var(--color-text-secondary);
+  font-weight: 600;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  border-bottom: 2px solid var(--color-primary);
+}
+
+section.metrics td {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  padding: 16px;
+  text-align: center;
+}
+
+section.metrics td:first-child {
+  font-weight: 600;
+  color: var(--color-text);
+  font-size: 16px;
+  text-align: left;
+}
+
+/* ============================================
+   Slide Type: Quote — 核心洞察
    ============================================ */
 
 section.quote {
@@ -272,29 +445,45 @@ section.quote {
   justify-content: center;
   align-items: center;
   text-align: center;
-  padding: 80px;
+  padding: 80px 100px;
+  background: var(--color-bg-alt);
 }
 
 section.quote blockquote {
   border-left: none;
   background: none;
-  font-size: 30px;
+  box-shadow: none;
+  font-size: 26px;
   font-weight: 500;
   color: var(--color-primary-dark);
-  line-height: 1.6;
-  max-width: 800px;
+  line-height: 1.7;
+  max-width: 850px;
+  position: relative;
+  padding: 0;
 }
 
 section.quote blockquote::before {
-  content: '"';
-  font-size: 72px;
+  content: '\201C';
+  font-size: 80px;
   color: var(--color-accent);
   display: block;
-  margin-bottom: -20px;
+  margin-bottom: -16px;
+  font-family: Georgia, serif;
+  line-height: 1;
+}
+
+section.quote blockquote::after {
+  content: '\201D';
+  font-size: 80px;
+  color: var(--color-accent);
+  display: block;
+  margin-top: -8px;
+  font-family: Georgia, serif;
+  line-height: 1;
 }
 
 /* ============================================
-   Slide Type: CTA (结束页)
+   Slide Type: CTA — 结束页
    ============================================ */
 
 section.cta {
@@ -303,54 +492,91 @@ section.cta {
   justify-content: center;
   align-items: center;
   text-align: center;
-  background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+  background: linear-gradient(145deg, #0A1929 0%, #1565C0 60%, #1E88E5 100%);
   color: white;
+  padding: 80px;
+}
+
+section.cta::before {
+  background: linear-gradient(90deg, var(--color-accent) 0%, #FFB74D 100%);
+  height: 5px;
 }
 
 section.cta h1 {
   color: white;
-  font-size: 40px;
+  font-size: 42px;
   margin-bottom: 24px;
+  text-shadow: 0 2px 8px rgba(0,0,0,0.3);
 }
 
 section.cta h2 {
-  color: rgba(255, 255, 255, 0.85);
-  font-size: 24px;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 22px;
   font-weight: 400;
+  margin-bottom: 32px;
+  border-bottom: none;
 }
 
 section.cta p {
-  color: rgba(255, 255, 255, 0.7);
-  font-size: 20px;
+  color: rgba(255, 255, 255, 0.6);
+  font-size: 18px;
+}
+
+section.cta strong {
+  background: linear-gradient(135deg, var(--color-accent), #FFB74D);
+  color: white;
+  padding: 6px 20px;
+  border-radius: 20px;
+  box-shadow: 0 4px 16px rgba(255,109,0,0.3);
 }
 
 /* ============================================
-   Pagination
+   Pagination — 精致页码
    ============================================ */
 
 section::after {
-  font-size: 14px;
-  color: var(--color-text-secondary);
+  font-size: 13px;
+  color: var(--color-text-light);
+  font-weight: 500;
 }
 
-/* Hide pagination on cover and cta */
 section.cover::after,
 section.cta::after {
   display: none;
 }
 
 /* ============================================
-   Responsive text for dense slides
+   Dense mode — 高密度信息页
    ============================================ */
 
 section.dense {
-  font-size: 20px;
-}
-
-section.dense table {
-  font-size: 16px;
+  font-size: 18px;
+  padding: 44px 64px;
 }
 
 section.dense h1 {
-  font-size: 30px;
+  font-size: 28px;
+  margin-bottom: 12px;
+}
+
+section.dense table {
+  font-size: 14px;
+}
+
+section.dense th {
+  font-size: 13px;
+  padding: 8px 10px;
+}
+
+section.dense td {
+  padding: 6px 10px;
+  font-size: 13px;
+}
+
+section.dense ul {
+  font-size: 16px;
+}
+
+section.dense li {
+  margin-bottom: 6px;
 }
