@@ -1,52 +1,52 @@
 [
   {
     "text": "[项目:InfoHunter] [类型:架构] 三层解耦管道设计：fetch→save / analyze / notify 三层完全独立调度，互不阻塞。分析失败不影响拉取，推送不依赖实时分析。使用 APScheduler 各自独立调度周期。背景：早期 fetch 和 analyze 耦合，AI 分析慢或失败会阻塞内容拉取。结论：解耦后系统鲁棒性大幅提升，各层可独立调参和排错。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "architecture", "project": "infohunter", "tags": ["解耦", "管道", "调度", "APScheduler"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:架构] 动态配置串联模式：env → pydantic Settings → system_config DB → dynamic_* 属性 → API → 前端表单。运行时改配置无需重启。核心实现是 _get_db_config(key) 读取 DB，@property dynamic_xxx 封装优先级逻辑。背景：初期配置都写在 env 中，每次改参数都要重新部署。结论：配置变更从约5分钟降到5秒，运维体验质的飞跃。适用于任何需要运行时可调配置的 Python 后端项目。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "architecture", "project": "infohunter", "tags": ["动态配置", "pydantic", "运行时", "数据库配置"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:踩坑] Docker 部署后浏览器缓存导致前端不更新。现象：代码已部署到容器，curl 确认文件已更新，但浏览器看不到新功能。根因：FastAPI 的 StaticFiles 没有设置 Cache-Control 头，浏览器缓存了旧的 JS/HTML 文件。解决方案：提示用户 Ctrl+Shift+R 硬刷新；长期应在静态文件 URL 上加版本哈希。教训：对频繁更新的嵌入式前端，必须有 cache-busting 策略。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "pitfall", "project": "infohunter", "tags": ["浏览器缓存", "Docker", "静态文件", "前端部署"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:踩坑] LLM 返回的 JSON 格式不标准，导致解析失败。即使 prompt 中明确要求纯 JSON 输出，LLM 仍会概率性返回带 ```json 包裹、尾部有解释文字、或使用单引号的内容。解决方案：实现 _fix_json_value() 做多层清洗（去 markdown 代码块 → 截断尾部 → 修复单引号 → regex 提取）。教训：永远不要信任 LLM 严格遵循输出格式，必须有鲁棒的 JSON 清洗层。这是一个通用问题，适用于任何 LLM 结构化输出场景。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "pitfall", "project": "infohunter", "tags": ["LLM", "JSON解析", "鲁棒性", "AI输出"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:踩坑] 订阅配置被环境变量默认值覆盖。用户在前端把订阅间隔从 4h 改为 8h，重新部署后又变回 4h。根因：代码直接从 Settings（env）读取，没有查 DB 中的用户设置。解决方案：实现 dynamic_* 属性模式——先查 DB（system_config 表），没有再 fallback 到 Settings（env）。教训：凡是前端可编辑的配置，从一开始就用 DB 优先模式，env 只做首次启动的 seed value。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "pitfall", "project": "infohunter", "tags": ["配置覆盖", "环境变量", "数据库优先", "部署"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:踩坑] Twitter API credit 超支。探索流+订阅流并行导致日均 credit 失控。根因：没有成本控制机制，多个调度任务不受约束。解决方案：实现三层控制——(1) 内存 credit 计数器 (2) DB 持久化每次调用 (3) 日限额熔断 (4) 前端看板可视化。教训：使用计费 API 时，从第一天就要有成本追踪和预算控制。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "pitfall", "project": "infohunter", "tags": ["API成本", "credit", "熔断", "成本控制"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:决策] 使用 TwitterAPI.io 高级搜索语法（min_faves / min_retweets）在 API 层面预过滤低质量内容。通过 _build_query() 在搜索语句中拼接 min_faves:50 min_retweets:10，API 层就过滤掉 60%+ 低质量推文，显著节省 credit。适用于任何使用 Twitter 搜索 API 的场景。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "decision", "project": "infohunter", "tags": ["Twitter", "预过滤", "高级搜索", "成本优化"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:架构] 增量 AI 分析 + 保护机制：Content 模型加 ai_analysis_retries 字段，查询时 WHERE 过滤 retries < max AND created_at >= cutoff，按 quality_score DESC 排优先级。避免对反复失败的内容无效重试，过期内容自动跳过，高质量内容优先分析。这些参数（max_retries / max_age_days / batch_size）都通过 ai_config 动态可配。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "architecture", "project": "infohunter", "tags": ["增量分析", "重试机制", "过期跳过", "优先级"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:亮点] Prompt 工程分层体系：config/prompts/ 下分 content_analysis（单条深度分析）、trend_analysis（跨平台趋势汇总）、recommend_evaluation（博主订阅评估）三套独立 prompt。每套有完整的：角色设定 → 分析方法论 → 输出 JSON 规范 → 评分标准 → 质量约束。比单一 prompt 更易维护和迭代，可复用于任何需要结构化 AI 分析输出的场景。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "highlight", "project": "infohunter", "tags": ["Prompt工程", "分层设计", "AI分析", "模板"]}
   },
   {
     "text": "[项目:InfoHunter] [类型:决策] 幂等数据库迁移模式：用 SQLAlchemy inspect 检查列是否存在，不存在时才执行 ALTER TABLE。在 _run_migrations() 中实现，每次启动自动执行。比 Alembic 轻量，适合小型项目。关键：inspect.get_columns() → 检查字段名 → 条件 ALTER。已在 database.py:46-80 实现。",
-    "user_id": "archerpyu",
+    "user_id": "<YOUR_USER_ID>",
     "metadata": {"type": "project_experience", "category": "decision", "project": "infohunter", "tags": ["数据库迁移", "幂等", "SQLAlchemy", "轻量级"]}
   }
 ]

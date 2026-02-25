@@ -51,7 +51,7 @@ Extract key information from user request:
 Use `search.py` multiple times to gather comprehensive information. Search until you have enough context.
 
 ```bash
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "<keyword>" --domain <domain> [-n <max_results>]
 ```
 
 **Recommended search order:**
@@ -70,7 +70,7 @@ python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "<ke
 If user doesn't specify a stack, **default to `html-tailwind`**.
 
 ```bash
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-tailwind
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "<keyword>" --stack html-tailwind
 ```
 
 Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`, `react-native`, `flutter`
@@ -115,26 +115,26 @@ Available stacks: `html-tailwind`, `react`, `nextjs`, `vue`, `svelte`, `swiftui`
 
 ```bash
 # 1. Search product type
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "SaaS product" --domain product
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "SaaS product" --domain product
 
 # 2. Search style (based on industry)
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "modern minimal professional" --domain style
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "modern minimal professional" --domain style
 
 # 3. Search typography
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "professional modern" --domain typography
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "professional modern" --domain typography
 
 # 4. Search color palette
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "saas tech" --domain color
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "saas tech" --domain color
 
 # 5. Search landing page structure
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "hero-centric pricing" --domain landing
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "hero-centric pricing" --domain landing
 
 # 6. Search UX guidelines
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "animation" --domain ux
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "accessibility" --domain ux
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "animation" --domain ux
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "accessibility" --domain ux
 
 # 7. Search stack guidelines (default: html-tailwind)
-python3 /data/home/archerpyu/.cursor/skills/ui-ux-pro-max/scripts/search.py "layout responsive" --stack html-tailwind
+python3 ~/.cursor/skills/ui-ux-pro-max/scripts/search.py "layout responsive" --stack html-tailwind
 ```
 
 **Then:** Synthesize all search results and implement the design.

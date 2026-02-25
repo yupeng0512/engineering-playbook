@@ -168,8 +168,8 @@ description: 工蜂 MR 提交助手。当用户表达"提交代码"、"创建 MR
    ```
 
 3. **解析 project_id**：
-   - SSH 格式：`git@git.woa.com:GROUP/PROJECT.git` → `GROUP/PROJECT`
-   - HTTPS 格式：`https://git.woa.com/GROUP/PROJECT.git` → `GROUP/PROJECT`
+   - SSH 格式：`git@<GIT_HOST>:GROUP/PROJECT.git` → `GROUP/PROJECT`
+   - HTTPS 格式：`https://<GIT_HOST>/GROUP/PROJECT.git` → `GROUP/PROJECT`
 
 ---
 
@@ -236,7 +236,7 @@ description: 工蜂 MR 提交助手。当用户表达"提交代码"、"创建 MR
 ```
 feat(codebuddy): 新增 Command/Skill 创建专家和工蜂 MR 助手技能包
 
---story=1070059632130300616 新增 CodeBuddy 技能包
+--story=<TAPD_STORY_ID> 新增 CodeBuddy 技能包
 ```
 
 **关键规则**：

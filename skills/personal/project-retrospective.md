@@ -168,7 +168,7 @@ description: 项目经验沉淀与复用专家。当用户表达"沉淀项目经
 
 2. **语义记忆检索**：
    - 调用 `search_memories` MCP 工具
-   - user_id: `archerpyu`
+   - user_id: `<YOUR_USER_ID>`（替换为实际用户 ID）
    - query: 基于用户当前问题构造的搜索语句
 
 3. **项目 Rule 检索**：
