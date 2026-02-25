@@ -4,6 +4,11 @@
 
 将投研报告 Markdown 转换为专业演示文稿。双渲染引擎：Marp（视觉优先，HTML/PDF 演示）+ python-pptx（可编辑 .pptx 交付）。共享统一设计规范。
 
+**v3.0 新特性**：
+- `--compact` 紧凑模式（只保留核心 Slide，适合路演）
+- `--charts` 图表模式（混合引擎：原生可编辑图表 + matplotlib 图片）
+- 三套配色风格（Professional / Minimal / Modern）
+
 适用关键词：生成 PPT、投研 PPT、路演幻灯片、Markdown 转 PPT、Pitch Deck。
 
 ---
@@ -171,29 +176,60 @@ paginate: true
 
 ```bash
 pip install python-pptx Pillow
+pip install matplotlib  # 可选，仅 --charts 需要
 ```
 
 ### 使用
 
 ```bash
-python scripts/md2pptx.py \
-  --input report.md \
-  --output output.pptx \
-  --style professional   # 或 minimal / modern
+# 完整模式（默认，所有模块+子章节）
+python scripts/md2pptx.py -i report.md -o output.pptx -s professional
+
+# 紧凑模式（只保留核心 Slide，适合路演）
+python scripts/md2pptx.py -i report.md -o output.pptx -s professional --compact
+
+# 启用图表（自动生成柱状图/折线图/饼图/漏斗图）
+python scripts/md2pptx.py -i report.md -o output.pptx -s professional --charts
+
+# 紧凑 + 图表（推荐路演场景）
+python scripts/md2pptx.py -i report.md -o output.pptx --compact --charts
 ```
 
 ### 风格选项
 
 ```bash
-# Professional（默认）
+# Professional（默认）— 深蓝商务
 python scripts/md2pptx.py -i report.md -o output.pptx -s professional
 
-# Minimal
+# Minimal — 极简黑白灰
 python scripts/md2pptx.py -i report.md -o output.pptx -s minimal
 
-# Modern
+# Modern — 科技感深色
 python scripts/md2pptx.py -i report.md -o output.pptx -s modern
 ```
+
+### 模式对比
+
+| 模式 | 产出 Slide 数 | 图表 | 适合场景 |
+|------|-------------|------|---------|
+| 默认 | 45-50 张 | 无 | 完整数据呈现、尽职调查 |
+| `--compact` | 20-25 张 | 无 | 路演 Pitch、快速浏览 |
+| `--charts` | +7 张图表 | 5 原生 + 2 图片 | 数据可视化增强 |
+| `--compact --charts` | 30-35 张 | 同上 | 路演 + 可视化（推荐） |
+
+### 图表引擎（混合方案）
+
+采用 **python-pptx 原生 Chart + matplotlib 图片**混合策略：
+
+| 图表类型 | 引擎 | 可编辑 | 说明 |
+|---------|------|--------|------|
+| 柱状图（收入/成本/场景对比） | python-pptx 原生 | ✅ 投资人可直接修改数据 | `add_chart(COLUMN_CLUSTERED)` |
+| 折线图（运营指标趋势） | python-pptx 原生 | ✅ | `add_chart(LINE)` |
+| 饼图（资金用途占比） | python-pptx 原生 | ✅ | `add_chart(PIE)` |
+| 漏斗图（TAM/SAM/SOM） | matplotlib 图片 | ❌ | python-pptx 不支持漏斗型 |
+| 四象限图（竞品定位） | matplotlib 图片 | ❌ | 自定义散点图+象限线 |
+
+**为什么不用 Plotly**：导出静态图需 kaleido（Chromium 内核，200MB+），ARM Mac 兼容问题多，CI 环境配置复杂。PPT 中是静态图，Plotly 的交互优势用不上。
 
 ### 工作原理
 
@@ -257,3 +293,118 @@ python scripts/md2pptx.py -i report.md -o output.pptx -s modern
 - [ ] 结尾包含愿景 + 联系方式 + CTA
 - [ ] Marp 版本和 pptx 版本内容一致
 - [ ] 所有数据来源与原报告一致
+
+---
+
+## PPT 质量评估标准（6 维度评分体系）
+
+用于评估生成 PPT 的质量，每个维度 1-5 分，总分 30 分。
+
+### 维度 1：数据完整性（Data Completeness）
+
+| 分数 | 标准 |
+|------|------|
+| 5 | 原报告所有关键数据（表格、指标、来源）100% 完整呈现 |
+| 4 | 关键数据 ≥ 90%，仅缺少辅助性数据 |
+| 3 | 关键数据 70-90%，有重要数据遗漏但不影响整体理解 |
+| 2 | 关键数据 < 70%，多处核心数据缺失 |
+| 1 | 严重缺失，无法从 PPT 获取完整信息 |
+
+**检查要点**：
+- 财务预测三年数据是否完整
+- TAM/SAM/SOM 数值是否准确
+- 竞品对比维度是否齐全
+- 数据来源是否标注
+
+### 维度 2：数据准确性（Data Accuracy）
+
+| 分数 | 标准 |
+|------|------|
+| 5 | 所有数据与原报告完全一致，无错误 |
+| 4 | 99% 准确，仅有极个别四舍五入差异 |
+| 3 | 有 1-2 处数据错误，但非核心指标 |
+| 2 | 有核心数据错误（如收入、估值等） |
+| 1 | 多处核心数据错误，严重误导 |
+
+### 维度 3：视觉设计（Visual Design）
+
+| 分数 | 标准 |
+|------|------|
+| 5 | 专业设计师水平：配色和谐、层次清晰、留白合理、品牌感强 |
+| 4 | 优秀：风格统一、视觉舒适、主次分明 |
+| 3 | 合格：基本美观，无明显设计问题 |
+| 2 | 较差：排版混乱、配色不协调、元素拥挤 |
+| 1 | 极差：像纯文本堆砌，无设计感 |
+
+**检查要点**：
+- 配色是否统一且专业
+- 字体大小层次是否清晰（标题 > 副标题 > 正文 > 注释）
+- 留白是否充足（内容不贴边）
+- 对齐是否整齐（文本、表格、图表）
+- 装饰元素（分割线、圆点、渐变）是否恰到好处
+
+### 维度 4：信息架构（Information Architecture）
+
+| 分数 | 标准 |
+|------|------|
+| 5 | 叙事逻辑清晰：痛点→方案→市场→模式→数据→团队→融资，有节奏感 |
+| 4 | 逻辑通顺，章节衔接自然 |
+| 3 | 结构合理但缺乏过渡，略显生硬 |
+| 2 | 结构混乱，关键信息位置不当 |
+| 1 | 无逻辑，信息堆砌 |
+
+**检查要点**：
+- 是否遵循投资人阅读习惯（先抓痛点 → 再给方案 → 用数据证明）
+- 章节过渡页是否自然
+- 每张 Slide 是否只聚焦一个主题
+- compact 模式是否保留了完整的叙事线
+
+### 维度 5：可编辑性与交互（Editability & Interaction）
+
+| 分数 | 标准 |
+|------|------|
+| 5 | 原生可编辑：所有文本/表格/图表可直接修改，无图片化内容 |
+| 4 | 大部分可编辑，仅个别图表为图片 |
+| 3 | 文本和表格可编辑，图表为图片 |
+| 2 | 部分内容图片化，修改困难 |
+| 1 | 整体为图片嵌入，完全不可编辑 |
+
+### 维度 6：文件质量（File Quality）
+
+| 分数 | 标准 |
+|------|------|
+| 5 | 文件体积合理（< 5MB），打开流畅，兼容 PowerPoint / Keynote / Google Slides |
+| 4 | 体积适中（5-15MB），主流软件可打开 |
+| 3 | 体积偏大（15-30MB），打开略慢 |
+| 2 | 体积过大（> 30MB），或兼容性问题 |
+| 1 | 文件损坏或无法打开 |
+
+### 评分参考
+
+| 总分 | 等级 | 说明 |
+|------|------|------|
+| 27-30 | ⭐⭐⭐⭐⭐ | 专业级，可直接用于投资人路演 |
+| 22-26 | ⭐⭐⭐⭐ | 优秀，微调后可用 |
+| 17-21 | ⭐⭐⭐ | 合格，需要人工优化 |
+| 12-16 | ⭐⭐ | 较差，需大幅修改 |
+| 6-11 | ⭐ | 不合格，需重新生成 |
+
+---
+
+## 开源 PPT 模板资源参考
+
+以下为调研后的开源/免费模板资源，可作为 `--template` 参数的母版基础：
+
+| 平台 | 类型 | 免费 | 质量 | 适合场景 | 链接 |
+|------|------|------|------|---------|------|
+| **Slidesgo** | Pitch Deck 模板 | ✅ 免费版（3个/月） | ⭐⭐⭐⭐⭐ | 投资路演、商业计划 | [slidesgo.com/pitch-deck](https://slidesgo.com/pitch-deck) |
+| **Pitch.com** | Pitch Deck 模板 | ✅ 完全免费 | ⭐⭐⭐⭐⭐ | 初创公司路演 | [pitch.com/templates](https://pitch.com/templates) |
+| **Canva** | 通用 PPT 模板 | ✅ 免费版 | ⭐⭐⭐⭐ | 多场景通用 | [canva.com/presentations](https://www.canva.com/presentations/templates/) |
+| **WPS 模板** | 中文商务模板 | ✅ 部分免费 | ⭐⭐⭐ | 中文商务场景 | [template.wps.com](http://template.wps.com/) |
+| **Google Slides** | 内置模板 | ✅ | ⭐⭐⭐ | 快速轻量 | Google Slides 内置 |
+
+**使用建议**：
+1. 从 Slidesgo / Pitch.com 下载高质量 `.pptx` 母版模板
+2. 在 PowerPoint/Keynote 中调整 Slide Layouts 布局
+3. 通过 `--template` 参数加载：`python scripts/md2pptx.py -i report.md -o out.pptx --template my-template.pptx`
+4. 脚本会基于母版的 Layout 0-9 填充内容，视觉效果远超纯代码生成
