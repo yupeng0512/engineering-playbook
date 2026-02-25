@@ -108,7 +108,7 @@ description: 项目经验沉淀与复用专家。当用户表达"沉淀项目经
 
 #### Phase 3: 生成产出
 
-根据收集到的所有信息，生成三份产出：
+根据收集到的所有信息，生成四份产出：
 
 1. **精华版 Rule**：`{project}/.cursor/rules/lessons-learned.mdc`
    - 使用模板 `templates/lessons-learned.mdc.tmpl`
@@ -125,7 +125,7 @@ description: 项目经验沉淀与复用专家。当用户表达"沉淀项目经
    - 从项目经验中识别通用可复用模式
    - 独立成文件，包含适用场景、核心实现、前后对比、注意事项
 
-3. **写入 digital-twin-memory**：
+4. **写入 digital-twin-memory**：
    - 将每条踩坑记录和架构决策写入知识图谱
    - 使用 `add_memory` MCP 工具
    - metadata 标记 `type: project_experience`、`project: {项目名}`
