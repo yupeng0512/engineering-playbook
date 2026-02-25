@@ -2,114 +2,195 @@
 alwaysApply: true
 ---
 
-  您是Python、Django和可扩展RESTful API开发专家。
+您是Python、Django和可扩展RESTful API开发专家。
 
-  核心原则
-  - Django优先方法：尽可能使用Django的内置功能和工具，充分发挥其全部能力
-  - 代码质量：优先考虑可读性和可维护性；遵循Django编码风格指南（PEP 8合规）
-  - 命名约定：使用描述性的变量和函数名；遵循命名约定（函数和变量使用小写加下划线）
-  - 模块化架构：使用Django应用以模块化方式构建项目，促进可重用性和关注点分离
-  - 性能意识：在设计决策中始终考虑可扩展性和性能影响
+## 核心原则
 
-  项目结构
+- Django优先方法：尽可能使用Django的内置功能和工具，充分发挥其全部能力
+- 代码质量：优先考虑可读性和可维护性；遵循Django编码风格指南（PEP 8合规）
+- 命名约定：使用描述性的变量和函数名；遵循命名约定（函数和变量使用小写加下划线）
+- 模块化架构：使用Django应用以模块化方式构建项目，促进可重用性和关注点分离
+- 性能意识：在设计决策中始终考虑可扩展性和性能影响
 
-  应用结构
-  app_name/
-  ├── migrations/        # 数据库迁移文件
-  ├── admin.py           # Django管理后台配置
-  ├── apps.py            # 应用配置
-  ├── models.py          # 数据库模型
-  ├── managers.py        # 自定义模型管理器
-  ├── signals.py         # Django信号
-  ├── tasks.py           # Celery任务（如适用）
-  └── __init__.py        # 包初始化
+## 项目结构
 
-  API结构
-  api/
-  └── v1/
-      ├── app_name/
-      │   ├── urls.py            # URL路由
-      │   ├── serializers.py     # 数据序列化
-      │   ├── views.py           # API视图
-      │   ├── permissions.py     # 自定义权限
-      │   ├── filters.py         # 自定义过滤器
-      │   └── validators.py      # 自定义验证器
-      └── urls.py                # 主API URL配置
+### 应用结构
+```
+app_name/
+├── migrations/        # 数据库迁移文件
+├── admin.py           # Django管理后台配置
+├── apps.py            # 应用配置
+├── models.py          # 数据库模型
+├── managers.py        # 自定义模型管理器
+├── signals.py         # Django信号
+├── tasks.py           # Celery任务（如适用）
+└── __init__.py        # 包初始化
+```
 
-  核心结构
-  core/
-  ├── responses.py       # 统一响应结构
-  ├── pagination.py      # 自定义分页类
-  ├── permissions.py     # 基础权限类
-  ├── exceptions.py      # 自定义异常处理器
-  ├── middleware.py      # 自定义中间件
-  ├── logging.py         # 结构化日志工具
-  └── validators.py      # 可重用验证器
+### API结构
+```
+api/
+└── v1/
+    ├── app_name/
+    │   ├── urls.py            # URL路由
+    │   ├── serializers.py     # 数据序列化
+    │   ├── views.py           # API视图
+    │   ├── permissions.py     # 自定义权限
+    │   ├── filters.py         # 自定义过滤器
+    │   └── validators.py      # 自定义验证器
+    └── urls.py                # 主API URL配置
+```
 
-  配置结构
-  config/
-  ├── settings/
-  │   ├── base.py        # 基础设置
-  │   ├── development.py # 开发环境设置
-  │   ├── staging.py     # 预发布环境设置
-  │   └── production.py  # 生产环境设置
-  ├── urls.py            # 主URL配置
-  └── wsgi.py           # WSGI配置
+### 核心结构
+```
+core/
+├── responses.py       # 统一响应结构
+├── pagination.py      # 自定义分页类
+├── permissions.py     # 基础权限类
+├── exceptions.py      # 自定义异常处理器
+├── middleware.py      # 自定义中间件
+├── logging.py         # 结构化日志工具
+└── validators.py      # 可重用验证器
+```
 
-  Django/Python开发指南
+### 配置结构
+```
+config/
+├── settings/
+│   ├── base.py        # 基础设置
+│   ├── development.py # 开发环境设置
+│   ├── staging.py     # 预发布环境设置
+│   └── production.py  # 生产环境设置
+├── urls.py            # 主URL配置
+└── wsgi.py           # WSGI配置
+```
 
-  视图和API设计
-  - 使用基于类的视图：利用Django的基于类的视图（CBVs）和DRF的APIViews
-  - RESTful设计：严格遵循RESTful原则，使用正确的HTTP方法和状态码
-  - 保持视图轻量：专注于请求处理；将业务逻辑放在模型、管理器和服务中
-  - 一致的响应格式：对成功和错误情况使用统一的响应结构
+## Django/Python 开发指南
 
-  模型和数据库
-  - ORM优先：利用Django的ORM进行数据库交互；除非性能需要，否则避免原始SQL查询
-  - 模型中的业务逻辑：将业务逻辑放在模型和自定义管理器中
-  - 查询优化：使用select_related和prefetch_related进行关联对象获取
-  - 数据库索引：为频繁查询的字段实现适当的数据库索引
-  - 事务：在关键操作中使用transaction.atomic()确保数据一致性
-  - 如果模型有变更，请自动帮我生成 migrations 文件，如果当前的 migrations 未提交到 git，可以删除当前未提交的 migrations，重新生成，以保证不会有过多的开发过渡使用的 migrations 文件
+### 视图和API设计
+- 使用基于类的视图：利用Django的CBVs和DRF的APIViews
+- RESTful设计：严格遵循RESTful原则，使用正确的HTTP方法和状态码
+- 保持视图轻量：专注于请求处理；将业务逻辑放在模型、管理器和服务中
+- 一致的响应格式：对成功和错误情况使用统一的响应结构
 
-  序列化器和验证
-  - DRF序列化器：使用Django REST Framework序列化器进行数据验证和序列化
-  - 自定义验证：为复杂的业务规则实现自定义验证器
-  - 字段级验证：使用序列化器字段验证进行输入清理
-  - 嵌套序列化器：使用适当的序列化器正确处理嵌套关系
+### 模型和数据库
+- ORM优先：利用Django的ORM进行数据库交互；除非性能需要，否则避免原始SQL查询
+- 模型中的业务逻辑：将业务逻辑放在模型和自定义管理器中
+- 查询优化：使用select_related和prefetch_related进行关联对象获取
+- 数据库索引：为频繁查询的字段实现适当的数据库索引
+- 事务：在关键操作中使用transaction.atomic()确保数据一致性
+- 如果模型有变更，请自动帮我生成 migrations 文件，如果当前的 migrations 未提交到 git，可以删除当前未提交的 migrations，重新生成，以保证不会有过多的开发过渡使用的 migrations 文件
 
-  认证和权限
-  - JWT认证：使用djangorestframework_simplejwt进行基于JWT令牌的认证
-  - 自定义权限：为不同用户角色实现细粒度权限类
-  - 安全最佳实践：实现适当的CSRF保护、CORS配置和输入清理
+### 序列化器和验证
+- DRF序列化器：使用Django REST Framework序列化器进行数据验证和序列化
+- 自定义验证：为复杂的业务规则实现自定义验证器
+- 字段级验证：使用序列化器字段验证进行输入清理
+- 嵌套序列化器：使用适当的序列化器正确处理嵌套关系
 
-  URL配置
-  - URL模式：使用urlpatterns定义清晰的URL模式，每个path()映射路由到视图
-  - 嵌套路由：使用include()进行模块化URL组织
-  - API版本控制：实现适当的API版本控制策略（推荐基于URL的版本控制）
+### 认证和权限
+- JWT认证：使用djangorestframework_simplejwt进行基于JWT令牌的认证
+- 自定义权限：为不同用户角色实现细粒度权限类
+- 安全最佳实践：实现适当的CSRF保护、CORS配置和输入清理
 
-  性能和可扩展性
+### URL配置
+- URL模式：使用urlpatterns定义清晰的URL模式，每个path()映射路由到视图
+- 嵌套路由：使用include()进行模块化URL组织
+- API版本控制：实现适当的API版本控制策略（推荐基于URL的版本控制）
 
-  查询优化
-  - N+1问题预防：始终适当使用select_related和prefetch_related
-  - 查询监控：在开发中监控查询次数和执行时间
-  - 数据库连接池：为高流量应用实现连接池
-  - 缓存策略：使用Django的缓存框架配合Redis/Memcached处理频繁访问的数据
+## 性能和可扩展性
 
-  响应优化
-  - 分页：在所有列表端点中标准化分页
-  - 字段选择：允许客户端指定所需字段以减少负载大小
-  - 压缩：为大型负载启用响应压缩
+### 查询优化
+- N+1问题预防：始终适当使用select_related和prefetch_related
+- 查询监控：在开发中监控查询次数和执行时间
+- 数据库连接池：为高流量应用实现连接池
+- 缓存策略：使用Django的缓存框架配合Redis/Memcached处理频繁访问的数据
 
-  错误处理和日志
+### 响应优化
+- 分页：在所有列表端点中标准化分页
+- 字段选择：允许客户端指定所需字段以减少负载大小
+- 压缩：为大型负载启用响应压缩
 
-  异常处理
-  - 如非必要，请尽量减少和避免直接`try: except Exception as e:`这类捕获，非预期异常将由框架统一处理
-  - 自定义异常处理器：实现全局异常处理以提供一致的错误响应
-  - Django信号：使用Django信号解耦错误处理和模型后活动
-  - 适当的HTTP状态码：使用适当的HTTP状态码（400、401、403、404、422、500等）
+## 错误处理和日志
 
-  日志策略
-  - 结构化日志：实现结构化日志用于API监控和调试
-  - 请求/响应日志：记录API调用，包括执行时间、用户信息和响应状态
-  - 性能监控：记录慢查询和性能瓶颈
+### 异常处理
+- 如非必要，请尽量减少和避免直接`try: except Exception as e:`这类捕获，非预期异常将由框架统一处理
+- 自定义异常处理器：实现全局异常处理以提供一致的错误响应
+- Django信号：使用Django信号解耦错误处理和模型后活动
+- 适当的HTTP状态码：使用适当的HTTP状态码（400、401、403、404、422、500等）
+
+### 日志策略
+- 结构化日志：实现结构化日志用于API监控和调试
+- 请求/响应日志：记录API调用，包括执行时间、用户信息和响应状态
+- 性能监控：记录慢查询和性能瓶颈
+
+---
+
+## bk-sap-api 项目特定约定
+
+> 以下内容为本项目独有的约定和踩坑经验，不适用于通用 Django 项目。
+
+### 双业务域架构
+
+本项目包含 OSM（工单系统）和 SAP（业务受理）两个独立业务域：
+
+| 业务域 | App 位置 | 职责 | 数据库标记 |
+|--------|---------|------|-----------|
+| OSM | `apps/osm/` | 工单管理、审批流程、TLOG 缓存 | `@pytest.mark.django_db` |
+| SAP | `apps/sap/` | 业务受理、批量任务、SAP 接口对接 | `@pytest.mark.django_db` |
+| Core | `core/` | 统一响应、权限、中间件、异常处理 | — |
+
+### SAP 接口封装规范
+
+```python
+# ✅ 正确：通过 SAPClient 封装层调用，统一错误处理
+from apps.sap.clients import SAPClient
+
+client = SAPClient()
+result = client.create_order(payload)
+
+# ❌ 错误：直接 requests.post 调用 SAP 接口
+import requests
+resp = requests.post("https://sap-api.example.com/orders", json=payload)
+```
+
+- 所有 SAP 外部接口调用必须经过 `apps/sap/clients/` 封装层
+- 封装层统一处理：超时重试（3次）、错误码映射、日志记录、Mock 切换
+
+### 模型命名约定
+
+| 类型 | 命名规范 | 示例 |
+|------|---------|------|
+| OSM 模型 | 以 `WorkOrder` / `Tlog` 开头 | `WorkOrder`, `WorkOrderItem`, `TlogCache` |
+| SAP 模型 | 以业务实体命名 | `BatchTask`, `SAPOrder`, `SAPConfig` |
+| 关联表 | `{主表}{从表}Relation` | `WorkOrderItemRelation` |
+| 配置表 | `{业务}Config` | `SAPConfig`, `TlogConfig` |
+
+### 序列化器继承层级
+
+```
+core.serializers.BaseSerializer          # 统一字段（created_at, updated_at, operator）
+├── apps.osm.serializers.OSMBaseSerializer   # OSM 通用字段（work_order_no）
+│   ├── WorkOrderSerializer
+│   └── WorkOrderItemSerializer
+└── apps.sap.serializers.SAPBaseSerializer   # SAP 通用字段（sap_order_id）
+    ├── BatchTaskSerializer
+    └── SAPOrderSerializer
+```
+
+### 环境配置
+
+```bash
+# 本项目使用双环境配置文件
+osm.env    # OSM 业务域的环境变量（数据库、Redis、TLOG 地址）
+sap.env    # SAP 业务域的环境变量（SAP 接口地址、认证信息）
+```
+
+- 开发环境通过 `python-dotenv` 加载
+- 生产环境通过 K8s ConfigMap 注入
+- 敏感配置（SAP 密码、JWT Secret）走 K8s Secret
+
+### 踩坑记录
+
+1. **Django `auto_now` 与测试冲突**：`updated_at = DateTimeField(auto_now=True)` 导致测试中无法手动设置时间。解决：用 `freezegun` 冻结时间，而非绕过 `auto_now`
+2. **DRF Serializer `source` 字段与 `write`**：设置了 `source='xxx'` 的字段默认变为只读。需要写入时需手动实现 `to_internal_value` 或使用独立的写入 Serializer
+3. **Celery Task 中的 DB 连接**：长时间运行的 Celery Task 中 Django DB 连接可能超时断开。解决：在 Task 开头 `django.db.connections.close_all()`，让 ORM 自动重建连接
