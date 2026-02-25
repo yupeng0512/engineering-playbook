@@ -1,0 +1,44 @@
+---
+description: InfoHunter Client 项目架构与开发工作流总览
+alwaysApply: true
+---
+
+# InfoHunter Client
+
+AI 社交媒体智能监控系统的双端客户端。Monorepo 架构。
+
+## 架构
+
+```
+infohunter-client/
+├── apps/mobile/       Expo SDK 54 + RN 0.81 + expo-router（iOS/Android）
+├── apps/web/          Vite 7 + React 19 + Tailwind v4（管理端）
+├── packages/shared/   API client + types + hooks（两端复用）
+├── scripts/           iOS 构建脚本（Mac 本地执行）
+└── patches/           pnpm patch（react-native renderer 安全补丁）
+```
+
+## 双机协作流程
+
+- **Linux Cloud (Cursor)**：编码 → git push
+- **Mac 本地**：git pull → pnpm install → 构建 → Simulator/真机测试
+- Cloud 无法运行 iOS Simulator，所有 iOS 测试必须在 Mac 上执行
+
+## 常用命令
+
+| 从根目录 | 说明 |
+|----------|------|
+| `pnpm ios` | 一键启动 iOS（自动 prebuild + run） |
+| `pnpm ios:rebuild` | 完全重建（clean → install → prebuild → run） |
+| `pnpm ios:dev` | Metro 热更新（需 App 已安装在 Simulator） |
+| `pnpm dev:web` | 启动 Web 管理端 |
+| `pnpm dev:mobile` | Metro dev-client 模式 |
+| `pnpm dev:mobile:go` | Metro Expo Go 模式 |
+
+## 技术约束
+
+- react **必须** >= 19.1.4（CVE-2025-55182 安全要求，详见 security.mdc）
+- react-native 0.81.5 需要 pnpm patch 才能配合 react 19.1.4
+- `patches/` 目录必须提交到 Git
+- `expo-notifications` 0.32+ 已移除 `removeNotificationSubscription`，用 `subscription.remove()`
+- **禁止** 在 app.json 中设置 `experiments.reactCanary: true`（会加载 canary renderer 导致版本不匹配）

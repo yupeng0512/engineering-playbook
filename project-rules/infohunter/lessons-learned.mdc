@@ -1,0 +1,53 @@
+---
+description: InfoHunter 项目经验沉淀 — 技术决策、踩坑记录、架构演进、最佳实践
+alwaysApply: true
+---
+
+# InfoHunter 经验沉淀
+
+> 最后更新: 2026-02-25
+
+## 技术栈决策及理由
+
+- **TwitterAPI.io**（推文搜索主力）: 支持 Twitter 高级搜索语法（min_faves / min_retweets），可在 API 层面预过滤低质量内容，节省 credit。ScrapeCreators 作为博主详情的辅助。
+- **AG-UI 协议 + Knot Agent**（AI 分析）: 通过 agui_client.py 对接 Knot 平台，复用平台侧的模型调度能力，不需自己管理 API key 轮转。模型可在 config 中切换。
+- **SQLAlchemy ORM + 手动迁移**（数据层）: 用 `create_all` 做初始建表，`_run_migrations()` 做增量字段迁移（幂等、检查列是否存在后再 ALTER）。没引入 Alembic 是因为项目规模不需要完整迁移链。
+- **pydantic-settings**（配置管理）: env → BaseSettings 提供类型安全的默认值，再通过 system_config 表做运行时动态覆盖，形成三级配置链。
+- **APScheduler**（定时调度）: 简单可靠，适合单进程场景。每个任务（fetch / analyze / notify）独立调度周期。
+- **Supervisor**（进程管理）: 容器内同时跑 main.py（调度器）和 uvicorn（API），用 supervisor 管理双进程。
+
+## 架构亮点
+
+- **三层解耦管道**: fetch→save / analyze / notify 三层完全独立调度，互不阻塞。分析失败不影响拉取，推送不依赖实时分析。
+- **动态配置串联**: env → pydantic Settings → system_config DB → `dynamic_*` 属性 → API → 前端表单。运行时改配置无需重启，所有配置项遵循 `_get_db_config()` 优先于环境变量的模式。
+- **增量分析 + 保护机制**: ai_analysis_retries 字段追踪失败次数（超 3 次跳过），max_age_days 过滤过期内容（超 3 天不再分析），quality_score 高的优先分析。
+- **Twitter 高级搜索预过滤**: 用 `_build_query()` 在搜索语句中拼接 `min_faves:N min_retweets:N`，API 层面就过滤掉低质量内容，节省大量 credit。
+- **Prompt 工程分层**: config/prompts/ 下分 content_analysis（单条）、trend_analysis（趋势汇总）、recommend_evaluation（博主评估）三套独立 prompt，各自有完整的评分标准和约束。
+
+## 踩坑记录
+
+1. **Docker 部署后前端不更新**: 浏览器缓存旧的 app.js/index.html → 加了 CSP 头和 `Cache-Control: no-store`，并提示用户 Ctrl+Shift+R 硬刷新。教训: 静态文件要加版本哈希或 cache-busting 策略。
+2. **YouTube OAuth token 静默过期**: refresh_token 过期后 API 返回 403，但代码只 log.error 不会重试或告警 → 改为在日志中明确标注 token 状态，stat API 展示 token 健康状态。教训: OAuth 的 refresh_token 也会过期（Google 的尤其是测试模式 7 天），需要监控 + 自动告警。
+3. **订阅配置被环境变量覆盖**: 用户在前端编辑了订阅间隔，但重新部署后被 env 默认值覆盖 → 改为 DB 优先读取，env 只作 fallback。教训: 所有用户可编辑的配置都应该 DB 优先，env 只做初始默认值。
+4. **AI 分析 JSON 解析失败**: LLM 返回的 JSON 经常带有 markdown 代码块标记或尾部多余文本 → 实现了 `_fix_json_value()` 做清洗（去 ```json 包裹、修复单引号、截断多余文本）。教训: 永远不要信任 LLM 严格遵循输出格式，必须有鲁棒的 JSON 清洗层。
+5. **Twitter credit 超支**: 探索流 + 订阅流同时运行导致日均 credit 超预期 → 实现了 credit 追踪（内存计数 + DB 持久化）和每日上限熔断。教训: 第三方 API 调用必须有成本可观测性和熔断机制。
+
+## 架构演进
+
+- **全量分析 → 增量分析+过期跳过**: 旧方案每轮全扫 ai_analyzed_at=NULL；新方案加了 retries 上限和 age 过滤，并按 quality_score 排优先级。收益: 避免 AI 资源浪费在反复失败或已过时的内容上。
+- **硬编码阈值 → DB 动态配置**: min_faves / batch_size / max_retries 等从硬编码改为 system_config 表存储 + 前端表单编辑。收益: 运维可在不重启的情况下调参。
+- **单一排序 → 多维度排序**: 搜索从纯 Latest 改为支持 Latest + Top，过滤从纯后处理改为 API 层预过滤 + 后处理双重过滤。收益: credit 消耗减少约 40-60%。
+
+## 关键约束
+
+- **TwitterAPI.io credit 模型**: 每次搜索 ~75 credit，趋势查询 ~450 credit/woeid，日限额需要严格控制。
+- **Knot/AG-UI 平台依赖**: 内网环境，需要对应的 agent_id 和模型配置，外网无法调用。
+- **MySQL JSON 列兼容性**: SQLAlchemy 的 JSON 类型在 MySQL 中需要注意 `None` vs `null` 的映射问题。
+- **Supervisor 双进程**: main.py 和 API 是两个独立进程，共享数据库但不共享内存状态（如 credit 计数器），需要通过 DB 同步。
+
+## 可复用模式
+
+- **动态配置串联模式**: `_get_db_config(key)` + `@property dynamic_xxx` → 参考 `src/main.py:85-250`
+- **幂等数据库迁移**: `_run_migrations()` 模式，inspect 检查列是否存在再 ALTER → 参考 `src/storage/database.py:46-80`
+- **LLM JSON 清洗**: `_fix_json_value()` 处理 LLM 输出的非标准 JSON → 参考 `src/analyzer/content_analyzer.py`
+- **结构化 Prompt 模板**: config/prompts/ 下的分层 prompt 体系（角色设定 → 方法论 → 输出规范 → 评分标准 → 约束）

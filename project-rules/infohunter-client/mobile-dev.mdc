@@ -1,0 +1,41 @@
+---
+description: Expo + React Native 移动端开发知识和踩坑记录
+globs: apps/mobile/**
+alwaysApply: false
+---
+
+# Mobile 开发指南
+
+## 入口与路由
+
+- 入口：`"main": "expo-router/entry"`（不是 App.js）
+- 路由：`app/` 目录 = 文件路由，`(tabs)/` = 底部标签导航
+- 布局：`_layout.tsx` 定义 Stack/Tabs 导航结构
+
+## Development Build vs Expo Go
+
+| | Development Build | Expo Go |
+|--|------------------|---------|
+| 启动命令 | `pnpm start` / `pnpm ios` | `pnpm start:go` |
+| 首次需要 | `prebuild` + 编译原生代码 | 无需编译 |
+| 原生模块 | 全部支持 | 仅 Expo 内置模块 |
+| 推送通知 | 支持 | 不支持 |
+| 包依赖 | 需要 `expo-dev-client` | 不需要 |
+
+首次使用 Development Build：`prebuild → run:ios（约 3-5 分钟）→ 之后只需 start`
+
+## 已知坑
+
+1. **expo-notifications 0.32+**：`removeNotificationSubscription` 已移除，用 `subscription.remove()`
+2. **Monorepo 路径**：Metro 默认不识别 workspace 包，`metro.config.js` 需要正确配置
+3. **修改 app.json plugins 后**：必须重新 `prebuild:clean`，否则原生配置不会更新
+4. **`ios/` 和 `android/` 目录**：prebuild 生成物，不提交到 Git
+
+## 关键配置文件
+
+| 文件 | 作用 |
+|------|------|
+| `app.json` | Expo 配置（bundleId、plugins、experiments） |
+| `metro.config.js` | Metro bundler 配置 |
+| `tsconfig.json` | TypeScript 配置 |
+| `.env` | 环境变量（EXPO_PUBLIC_API_URL） |

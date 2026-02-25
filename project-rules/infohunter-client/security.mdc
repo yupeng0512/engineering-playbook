@@ -1,0 +1,36 @@
+---
+description: 安全漏洞修复记录和版本约束（CVE-2025-55182 等）
+alwaysApply: true
+---
+
+# 安全约束
+
+## CVE-2025-55182 — React Server Components RCE（严重）
+
+CVSS 10.0，已有公开 POC 和攻击案例。
+
+### 安全版本要求
+
+| 包 | 最低安全版本 |
+|----|-------------|
+| react | >= 19.1.4 |
+| react-dom | >= 19.1.4 |
+| react-server-dom-webpack | >= 19.1.4 |
+| next | >= 16.0.7 (16.x) |
+
+### 本项目的修复方案
+
+1. **react + react-dom override 锁定 19.1.4**（`package.json` → `pnpm.overrides`）
+2. **pnpm patch react-native@0.81.5**（修补 renderer 版本检查 19.1.0→19.1.4）
+3. **react-server-dom-webpack override 19.1.4**（防御性，防止任何依赖引入漏洞版本）
+4. **postinstall 脚本修补 @expo/cli 内嵌 canary react**（`scripts/fix-canary-versions.sh`）
+5. **apps/web react/react-dom 锁定 19.1.4**（不使用 ^19.2.0 范围）
+
+### 禁止操作
+
+- 不得将 react 或 react-dom 降级到 < 19.1.4
+- 不得删除 `patches/react-native@0.81.5.patch`
+- 不得移除 `pnpm.patchedDependencies` 配置
+- 不得删除 `scripts/fix-canary-versions.sh` 或 `postinstall` 脚本
+- 升级 react-native 版本时需重新验证 renderer 兼容性并更新 patch
+- 不得在 apps/web 使用 `^` 范围声明 react/react-dom（避免安装不一致版本）

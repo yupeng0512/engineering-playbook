@@ -1,0 +1,115 @@
+---
+alwaysApply: true
+---
+
+  您是Python、Django和可扩展RESTful API开发专家。
+
+  核心原则
+  - Django优先方法：尽可能使用Django的内置功能和工具，充分发挥其全部能力
+  - 代码质量：优先考虑可读性和可维护性；遵循Django编码风格指南（PEP 8合规）
+  - 命名约定：使用描述性的变量和函数名；遵循命名约定（函数和变量使用小写加下划线）
+  - 模块化架构：使用Django应用以模块化方式构建项目，促进可重用性和关注点分离
+  - 性能意识：在设计决策中始终考虑可扩展性和性能影响
+
+  项目结构
+
+  应用结构
+  app_name/
+  ├── migrations/        # 数据库迁移文件
+  ├── admin.py           # Django管理后台配置
+  ├── apps.py            # 应用配置
+  ├── models.py          # 数据库模型
+  ├── managers.py        # 自定义模型管理器
+  ├── signals.py         # Django信号
+  ├── tasks.py           # Celery任务（如适用）
+  └── __init__.py        # 包初始化
+
+  API结构
+  api/
+  └── v1/
+      ├── app_name/
+      │   ├── urls.py            # URL路由
+      │   ├── serializers.py     # 数据序列化
+      │   ├── views.py           # API视图
+      │   ├── permissions.py     # 自定义权限
+      │   ├── filters.py         # 自定义过滤器
+      │   └── validators.py      # 自定义验证器
+      └── urls.py                # 主API URL配置
+
+  核心结构
+  core/
+  ├── responses.py       # 统一响应结构
+  ├── pagination.py      # 自定义分页类
+  ├── permissions.py     # 基础权限类
+  ├── exceptions.py      # 自定义异常处理器
+  ├── middleware.py      # 自定义中间件
+  ├── logging.py         # 结构化日志工具
+  └── validators.py      # 可重用验证器
+
+  配置结构
+  config/
+  ├── settings/
+  │   ├── base.py        # 基础设置
+  │   ├── development.py # 开发环境设置
+  │   ├── staging.py     # 预发布环境设置
+  │   └── production.py  # 生产环境设置
+  ├── urls.py            # 主URL配置
+  └── wsgi.py           # WSGI配置
+
+  Django/Python开发指南
+
+  视图和API设计
+  - 使用基于类的视图：利用Django的基于类的视图（CBVs）和DRF的APIViews
+  - RESTful设计：严格遵循RESTful原则，使用正确的HTTP方法和状态码
+  - 保持视图轻量：专注于请求处理；将业务逻辑放在模型、管理器和服务中
+  - 一致的响应格式：对成功和错误情况使用统一的响应结构
+
+  模型和数据库
+  - ORM优先：利用Django的ORM进行数据库交互；除非性能需要，否则避免原始SQL查询
+  - 模型中的业务逻辑：将业务逻辑放在模型和自定义管理器中
+  - 查询优化：使用select_related和prefetch_related进行关联对象获取
+  - 数据库索引：为频繁查询的字段实现适当的数据库索引
+  - 事务：在关键操作中使用transaction.atomic()确保数据一致性
+  - 如果模型有变更，请自动帮我生成 migrations 文件，如果当前的 migrations 未提交到 git，可以删除当前未提交的 migrations，重新生成，以保证不会有过多的开发过渡使用的 migrations 文件
+
+  序列化器和验证
+  - DRF序列化器：使用Django REST Framework序列化器进行数据验证和序列化
+  - 自定义验证：为复杂的业务规则实现自定义验证器
+  - 字段级验证：使用序列化器字段验证进行输入清理
+  - 嵌套序列化器：使用适当的序列化器正确处理嵌套关系
+
+  认证和权限
+  - JWT认证：使用djangorestframework_simplejwt进行基于JWT令牌的认证
+  - 自定义权限：为不同用户角色实现细粒度权限类
+  - 安全最佳实践：实现适当的CSRF保护、CORS配置和输入清理
+
+  URL配置
+  - URL模式：使用urlpatterns定义清晰的URL模式，每个path()映射路由到视图
+  - 嵌套路由：使用include()进行模块化URL组织
+  - API版本控制：实现适当的API版本控制策略（推荐基于URL的版本控制）
+
+  性能和可扩展性
+
+  查询优化
+  - N+1问题预防：始终适当使用select_related和prefetch_related
+  - 查询监控：在开发中监控查询次数和执行时间
+  - 数据库连接池：为高流量应用实现连接池
+  - 缓存策略：使用Django的缓存框架配合Redis/Memcached处理频繁访问的数据
+
+  响应优化
+  - 分页：在所有列表端点中标准化分页
+  - 字段选择：允许客户端指定所需字段以减少负载大小
+  - 压缩：为大型负载启用响应压缩
+
+  错误处理和日志
+
+  异常处理
+  - 如非必要，请尽量减少和避免直接`try: except Exception as e:`这类捕获，非预期异常将由框架统一处理
+  - 自定义异常处理器：实现全局异常处理以提供一致的错误响应
+  - Django信号：使用Django信号解耦错误处理和模型后活动
+  - 适当的HTTP状态码：使用适当的HTTP状态码（400、401、403、404、422、500等）
+
+  日志策略
+  - 结构化日志：实现结构化日志用于API监控和调试
+  - 请求/响应日志：记录API调用，包括执行时间、用户信息和响应状态
+  - 性能监控：记录慢查询和性能瓶颈
