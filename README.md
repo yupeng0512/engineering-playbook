@@ -19,16 +19,16 @@
 │  ┌─────────────┐  ┌──────────┐  ┌────────────────────┐    │
 │  │ knowledge-   │  │ patterns/│  │ skills/            │    │
 │  │ base/        │  │          │  │ ├── personal/      │    │
-│  │ 项目完整档案 │  │ 可复用   │  │ │   11 个 AI 协作  │    │
+│  │ 项目完整档案 │  │ 可复用   │  │ │   18 个 AI 协作  │    │
 │  │              │  │ 代码模式 │  │ │   工具           │    │
 │  │ - infohunter │  │          │  │ └── cursor-system/ │    │
-│  │ - ...更多项目│  │ 4 个独立 │  │     5 个系统级     │    │
-│  └──────────────┘  │ pattern  │  │     Skills         │    │
-│                    └──────────┘  └────────────────────┘    │
+│  │ - qinyuanqiao│  │ 4 个独立 │  │     5 个系统级     │    │
+│  │ - ...更多项目│  │ pattern  │  │     Skills         │    │
+│  └──────────────┘  └──────────┘  └────────────────────┘    │
 │  ┌──────────────┐  ┌──────────┐                            │
 │  │ project-     │  │templates/│                            │
 │  │ rules/       │  │ 经验文档 │                            │
-│  │ 3 个项目精华 │  │ 生成模板 │                            │
+│  │ 4 个项目精华 │  │ 生成模板 │                            │
 │  │ 经验 Rule    │  └──────────┘                            │
 │  └──────────────┘                                          │
 └────────────────────────────────────────────────────────────┘
@@ -50,7 +50,8 @@ engineering-playbook/
 │
 ├── knowledge-base/                # 📚 项目经验完整档案（按需引用）
 │   ├── infohunter.md                # InfoHunter: AI 社交监控 — 完整经验
-│   └── infohunter-memory-pending.json  # 待写入语义记忆的条目
+│   ├── infohunter-memory-pending.json  # 待写入语义记忆的条目
+│   └── qinyuanqiao-bp.md           # 亲缘桥: 投研报告/商业计划书
 │
 ├── patterns/                      # 🔧 可复用代码模式（独立于项目）
 │   ├── dynamic-config.md            # 动态配置串联（env → DB → API → UI）
@@ -59,17 +60,25 @@ engineering-playbook/
 │   └── structured-prompt-engineering.md  # 结构化 Prompt 工程（6 模块模板）
 │
 ├── skills/                        # 🤖 AI 协作工具集
-│   ├── personal/                    # 个人 Skills（11 个）
+│   ├── personal/                    # 个人 Skills（18 个）
 │   │   ├── project-retrospective.md   # ★ 经验沉淀与复用（核心 Skill）
+│   │   ├── ai-workflow/               # AI Native 开发工作流总纲
 │   │   ├── article-tutor/             # 文章/书籍精读教学
-│   │   ├── command-creator/           # Command/Skill 创建向导
+│   │   ├── brainstorming/             # 需求澄清与方案设计（苏格拉底式）
+│   │   ├── command-creator/           # Command/Skill 创建向导（跨平台通用）
 │   │   ├── cybernetics-loop/          # 控制论反馈系统设计
+│   │   ├── defense-in-depth/          # 深度防御与安全检查
 │   │   ├── frontend-design/           # 前端 UI 设计
-│   │   ├── gongfeng-mr/               # 工蜂 MR 提交（Git + TAPD 关联）
+│   │   ├── gongfeng-mr/               # 工蜂 MR 提交（含 Code Review 自检）
+│   │   ├── investment-research-report/ # 投研报告/商业计划书生成
+│   │   ├── knowledge-base/            # 项目知识库助手
 │   │   ├── share-writer/              # 团队分享文章编写
 │   │   ├── skill-from-masters/        # 从专家方法论创建 Skill
+│   │   ├── system-debugging/          # 系统调试专家（4阶段）
 │   │   ├── tech-review/               # 技术架构评审
 │   │   ├── ui-ux-pro-max/             # UI/UX 设计（57 种风格 + 8 框架）
+│   │   ├── unittest/                  # TDD 单元测试专家（通用版）
+│   │   ├── writing-plans/             # 执行计划专家（原子级任务拆分）
 │   │   └── yt-dlp/                    # 视频下载助手
 │   └── cursor-system/               # Cursor 系统级 Skills（5 个）
 │       ├── create-rule/               # 创建 Cursor Rule
@@ -81,7 +90,8 @@ engineering-playbook/
 ├── project-rules/                 # 📋 各项目精华经验 Rule（auto-apply）
 │   ├── infohunter/                  # lessons-learned.mdc
 │   ├── infohunter-client/           # project-overview, mobile-dev, security
-│   └── bk-sap-api/                  # django, flake8
+│   ├── bk-sap-api/                  # django, flake8, unittest, ai-workflow-enforcement
+│   └── qinyuanqiao/                 # wechat-miniprogram-api
 │
 ├── templates/                     # 📝 经验文档生成模板
 │   ├── lessons-learned.mdc.tmpl     # 精华版 Rule 模板（≤200 行）
@@ -215,11 +225,11 @@ AI 会触发 `project-retrospective` Skill 的**生成模式**，自动收集项
 
 | 类别 | 数量 | 说明 |
 |------|------|------|
-| 项目经验档案 | 1 | InfoHunter |
+| 项目经验档案 | 2 | InfoHunter、亲缘桥投研报告 |
 | 可复用 Pattern | 4 | 动态配置、LLM JSON 清洗、幂等迁移、结构化 Prompt |
-| 个人 Skills | 11 | 覆盖经验沉淀、文章精读、前端设计、代码审查等 |
+| 个人 Skills | 18 | 覆盖经验沉淀、TDD测试、投研报告、AI工作流、系统调试等 |
 | 系统 Skills | 5 | Cursor 平台级能力 |
-| 项目 Rules | 6 | 来自 3 个项目 |
+| 项目 Rules | 9 | 来自 4 个项目（infohunter/infohunter-client/bk-sap-api/qinyuanqiao） |
 
 ## 贡献新经验
 
@@ -241,4 +251,5 @@ AI 会触发 `project-retrospective` Skill 的**生成模式**，自动收集项
 
 | 日期 | 变更 |
 |------|------|
+| 2026-02-25 | 合并本地 Mac 双项目经验：新增 8 个 Skill（ai-workflow/brainstorming/defense-in-depth/investment-research-report/knowledge-base/system-debugging/unittest/writing-plans）+ 4 个 Rule（bk-sap-api: unittest/ai-workflow-enforcement, qinyuanqiao: wechat-miniprogram-api）+ 合并优化 command-creator/gongfeng-mr + 亲缘桥投研报告案例入库 |
 | 2026-02-25 | 初始化仓库：迁移全量 Skills + 创建 InfoHunter 经验档案 + 提取 4 个 Pattern |

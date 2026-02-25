@@ -1,0 +1,89 @@
+---
+description: 微信小程序 API 调用规范与性能优化
+alwaysApply: true
+---
+
+# 微信小程序 API 调用规范与性能优化
+
+## 1. 接口调用频率限制
+
+微信小程序对以下接口有严格的频率限制：
+
+| API 接口 | 频率规范 |
+|---------|---------|
+| `wx.login` | 日调用不超过 PV 的 2 倍；单用户 ≤ 4次/秒 |
+| `wx.checkSession` | 同上 |
+| `wx.getSetting` | 同上 |
+| `wx.getUserInfo` | 同上 |
+| `wx.getUserProfile` | 同上 |
+
+### 禁止用法：
+- **不要**在 `setInterval` / `setTimeout` 循环中调用限频接口
+- **不要**在页面 `onShow` 中重复调用限频接口（页面每次切换回来都会触发）
+- **不要**在 `onLoad` 中无条件调用限频接口
+
+### 正确做法：
+- 在 `App.onLaunch` 中调用一次，缓存结果
+- 用变量/Storage 缓存接口返回值，后续复用缓存
+- 用状态标记避免重复请求（如 `_dataLoaded`、`_prevLoggedIn`）
+
+```javascript
+// ✅ 正确：onShow 中检测状态变化，仅在变化时重新请求
+onShow() {
+  const isLoggedIn = app.isLoggedIn()
+  if (isLoggedIn !== this._prevLoggedIn) {
+    this._loadData()
+  }
+  this._prevLoggedIn = isLoggedIn
+}
+
+// ❌ 错误：每次 onShow 都请求
+onShow() {
+  this._loadData() // 切换 tab 就触发，频率过高
+}
+```
+
+## 2. 云函数调用优化
+
+- 合并请求：能用一次云函数调用返回的数据，不要拆成多次
+- 错误处理：所有云函数调用都要 try-catch，避免未捕获异常导致页面卡死
+- Loading 管理：`showLoading` 和 `hideLoading` 必须成对出现
+- 超时处理：云函数默认超时 20s，长时间操作要给用户反馈
+
+## 3. setData 优化
+
+- 避免在短时间内多次调用 `setData`，合并为一次
+- 不要传递大量数据（如长列表全量更新），使用数据路径更新
+- `setData` 的数据量建议 < 256KB
+
+```javascript
+// ✅ 正确：合并 setData
+this.setData({
+  modeClass: theme.getModeClass(),
+  isLoggedIn,
+  profiles: newProfiles
+})
+
+// ❌ 错误：多次 setData
+this.setData({ modeClass: theme.getModeClass() })
+this.setData({ isLoggedIn })
+this.setData({ profiles: newProfiles })
+```
+
+## 4. 页面生命周期最佳实践
+
+- `onLoad`：仅执行一次的初始化逻辑（首次数据加载、参数解析）
+- `onShow`：仅做轻量状态同步（主题、登录态检测），**不要无条件发起网络请求**
+- `onReady`：DOM 相关操作
+- `onHide`：清理定时器等资源
+
+## 5. getPhoneNumber 注意事项
+
+- `open-type="getPhoneNumber"` 在模拟器中始终返回 `fail no permission`
+- 真机调试需要小程序已通过微信认证
+- 开发阶段应提供模拟器可用的备选登录方式（如 openid 直接登录）
+
+## 6. 参考文档
+
+- [接口调用频率规范](https://developers.weixin.qq.com/miniprogram/dev/framework/performance/api-frequency.html)
+- [小程序性能优化](https://developers.weixin.qq.com/miniprogram/dev/framework/performance/)

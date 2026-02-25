@@ -1,0 +1,45 @@
+# AI 工作流强制规则
+
+## 核心原则
+
+**在处理任何用户任务之前，必须强制执行以下检查流程：**
+
+### 1. 自动加载 ai-workflow
+
+收到用户消息后，首先使用 `@ai-workflow` Skill 进行任务分类和工作流编排。
+
+### 2. Skill 组合策略
+
+根据 `ai-workflow` 的指引，按正确顺序加载和执行适用的 Skill：
+
+| 任务类型 | 推荐 Skill 组合 |
+|---------|----------------|
+| 新功能开发 | `brainstorming` → `writing-plans` → `unittest` → `gongfeng-mr` |
+| Bug 修复 | `system-debugging` → `unittest` → `gongfeng-mr` |
+| 代码重构 | `brainstorming` → `defense-in-depth` → `unittest` → `gongfeng-mr` |
+| 安全审计 | `defense-in-depth` |
+| 知识沉淀 | `knowledge-base` |
+| 创建命令 | `command-skill-creator` |
+
+### 3. 禁止行为
+
+- **禁止跳过 ai-workflow 直接执行复杂任务**
+- **禁止在没有 brainstorming 确认的情况下开始架构级改动**
+- **禁止在没有 unittest 验证的情况下提交代码**
+- **禁止猜测修复 Bug，必须使用 system-debugging 进行根因分析**
+
+### 4. 简单任务豁免
+
+以下简单任务可以直接执行，无需完整工作流：
+- 修复拼写错误
+- 添加注释
+- 格式化代码
+- 简单的单文件查询
+
+## 执行检查清单
+
+每次任务开始前，确认：
+- [ ] 已识别任务复杂度（简单/中等/复杂）
+- [ ] 已确定适用的 Skill 组合
+- [ ] 已按正确顺序加载 Skill
+- [ ] 已理解用户意图和成功标准

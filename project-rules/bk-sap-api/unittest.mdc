@@ -1,0 +1,97 @@
+---
+description: bk-sap-api 项目单元测试配置。OSM/SAP 模块的测试环境、执行命令、目录结构和 Pipeline 组件测试规范。
+alwaysApply: true
+---
+
+# bk-sap-api 单元测试配置
+
+## 测试环境
+
+| 配置项 | 值 |
+|--------|------|
+| Python 版本 | 3.10+ |
+| 虚拟环境 | `.venv/py310/bin/python`（如找不到请询问用户） |
+| 测试框架 | pytest + pytest-django + pytest-cov + pytest-html |
+| 环境变量 | `osm.env`（OSM 模块）/ `sap.env`（SAP 模块），pytest_main.py 自动加载 |
+
+## 执行命令
+
+```bash
+# OSM 模块全量测试
+.venv/py310/bin/python tests/pytest_main.py unit --modules osm
+
+# SAP 模块全量测试
+.venv/py310/bin/python tests/pytest_main.py unit --modules sap
+
+# 指定子目录
+.venv/py310/bin/python tests/pytest_main.py unit --modules osm/ticket
+
+# 指定测试（-k 过滤）
+.venv/py310/bin/python tests/pytest_main.py unit --modules osm -k "TestBusinessResources"
+
+# 调试单个测试
+.venv/py310/bin/python tests/pytest_main.py unit --modules osm -k "test_name" -s -v -x --pdb
+```
+
+## 测试目录结构
+
+```
+tests/
+├── pytest_main.py          # 测试入口脚本
+├── unit/
+│   ├── entry/
+│   │   ├── conftest.py     # 全局 fixture（含 Pipeline 数据库 fixture）
+│   │   ├── osm/            # OSM 模块测试
+│   │   │   ├── app/ business/ component/ policy/ system/ ticket/
+│   │   │   └── mock_data.py
+│   │   └── sap/            # SAP 模块测试
+│   │       ├── beat/ test_batch_file/ test_function/ test_handler/
+│   ├── core/               # 核心模块测试
+│   └── mock_data/          # 共享 Mock 数据
+├── report/                 # 测试报告输出
+│   ├── unit_osm.html / unit_sap.html
+│   └── osm_cov/ sap_cov/
+```
+
+## Pipeline 组件测试
+
+bk-sap-api 使用蓝鲸 Pipeline 框架，组件测试需继承 `ComponentTestMixin`：
+
+```python
+from pipeline.component_framework.test import (
+    ComponentTestCase, ComponentTestMixin, ExecuteAssertion, ScheduleAssertion,
+)
+
+class TestMyComponent(TestCase, ComponentTestMixin):
+    def component_cls(self):
+        return MyComponent
+
+    @property
+    def _cases(self):
+        return [ComponentTestCase(
+            name="组件执行成功",
+            inputs={"bk_biz_id": 100001},
+            parent_data={},
+            execute_assertion=ExecuteAssertion(success=True, outputs={"overall_success": True}),
+            schedule_assertion=ScheduleAssertion(success=True, schedule_finished=True, outputs={}),
+        )]
+```
+
+**注意**：Pipeline 组件在导入时会调用 `ComponentModel.objects.update_or_create()`，conftest.py 中已配置 session 级别的数据库 fixture。
+
+## 数据库标记
+
+```python
+# 需要数据库访问的测试必须标记
+pytestmark = pytest.mark.django_db(transaction=True, databases=settings.DATABASES.keys())
+```
+
+## Mock 数据管理
+
+集中在 `tests/unit/entry/osm/mock_data.py`：
+
+```python
+from copy import deepcopy
+TEST_BK_BIZ_ID = 100001
+CREATE_BUSINESS_PARAMS = {"business_id": "test_id", "bk_biz_id": TEST_BK_BIZ_ID, ...}
+```
