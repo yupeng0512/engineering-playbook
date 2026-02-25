@@ -19,7 +19,7 @@
 │  ┌─────────────┐  ┌──────────┐  ┌────────────────────┐    │
 │  │ knowledge-   │  │ patterns/│  │ skills/            │    │
 │  │ base/        │  │          │  │ ├── personal/      │    │
-│  │ 项目完整档案 │  │ 可复用   │  │ │   18 个 AI 协作  │    │
+│  │ 项目完整档案 │  │ 可复用   │  │ │   17 个 AI 协作  │    │
 │  │              │  │ 代码模式 │  │ │   工具           │    │
 │  │ - infohunter │  │          │  │ └── cursor-system/ │    │
 │  │ - qinyuanqiao│  │ 4 个独立 │  │     5 个系统级     │    │
@@ -60,7 +60,7 @@ engineering-playbook/
 │   └── structured-prompt-engineering.md  # 结构化 Prompt 工程（6 模块模板）
 │
 ├── skills/                        # 🤖 AI 协作工具集
-│   ├── personal/                    # 个人 Skills（18 个）
+│   ├── personal/                    # 个人 Skills（17 个）
 │   │   ├── project-retrospective.md   # ★ 经验沉淀与复用（核心 Skill）
 │   │   ├── ai-workflow/               # AI Native 开发工作流总纲
 │   │   ├── article-tutor/             # 文章/书籍精读教学
@@ -68,7 +68,6 @@ engineering-playbook/
 │   │   ├── command-creator/           # Command/Skill 创建向导（跨平台通用）
 │   │   ├── cybernetics-loop/          # 控制论反馈系统设计
 │   │   ├── defense-in-depth/          # 深度防御与安全检查
-│   │   ├── frontend-design/           # 前端 UI 设计
 │   │   ├── gongfeng-mr/               # 工蜂 MR 提交（含 Code Review 自检）
 │   │   ├── investment-research-report/ # 投研报告/商业计划书生成
 │   │   ├── knowledge-base/            # 项目知识库助手
@@ -76,7 +75,7 @@ engineering-playbook/
 │   │   ├── skill-from-masters/        # 从专家方法论创建 Skill
 │   │   ├── system-debugging/          # 系统调试专家（4阶段）
 │   │   ├── tech-review/               # 技术架构评审
-│   │   ├── ui-ux-pro-max/             # UI/UX 设计（57 种风格 + 8 框架）
+│   │   ├── ui-ux-pro-max/             # UI/UX 设计（57 种风格 + 8 框架 + 设计哲学）
 │   │   ├── unittest/                  # TDD 单元测试专家（通用版）
 │   │   ├── writing-plans/             # 执行计划专家（原子级任务拆分）
 │   │   └── yt-dlp/                    # 视频下载助手
@@ -227,7 +226,7 @@ AI 会触发 `project-retrospective` Skill 的**生成模式**，自动收集项
 |------|------|------|
 | 项目经验档案 | 2 | InfoHunter、亲缘桥投研报告 |
 | 可复用 Pattern | 4 | 动态配置、LLM JSON 清洗、幂等迁移、结构化 Prompt |
-| 个人 Skills | 18 | 覆盖经验沉淀、TDD测试、投研报告、AI工作流、系统调试等 |
+| 个人 Skills | 17 | 覆盖经验沉淀、TDD测试、投研报告、AI工作流、系统调试等（frontend-design 已合并入 ui-ux-pro-max） |
 | 系统 Skills | 5 | Cursor 平台级能力 |
 | 项目 Rules | 9 | 来自 4 个项目（infohunter/infohunter-client/bk-sap-api/qinyuanqiao） |
 
@@ -251,5 +250,6 @@ AI 会触发 `project-retrospective` Skill 的**生成模式**，自动收集项
 
 | 日期 | 变更 |
 |------|------|
+| 2026-02-25 | 资产评估修复：flake8.mdc 精简至 ~70 行（-206 行）、frontend-design 合并入 ui-ux-pro-max、knowledge-base 与 project-retrospective 明确边界、django.mdc 补充项目特定约定 |
 | 2026-02-25 | 合并本地 Mac 双项目经验：新增 8 个 Skill（ai-workflow/brainstorming/defense-in-depth/investment-research-report/knowledge-base/system-debugging/unittest/writing-plans）+ 4 个 Rule（bk-sap-api: unittest/ai-workflow-enforcement, qinyuanqiao: wechat-miniprogram-api）+ 合并优化 command-creator/gongfeng-mr + 亲缘桥投研报告案例入库 |
 | 2026-02-25 | 初始化仓库：迁移全量 Skills + 创建 InfoHunter 经验档案 + 提取 4 个 Pattern |
