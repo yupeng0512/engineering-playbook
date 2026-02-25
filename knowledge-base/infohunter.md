@@ -144,6 +144,36 @@ infohunter/
 - **Credit 成本可观测**: 内存计数 + DB 持久化 + API 看板 + 前端展示，形成完整的成本监控闭环
 - **嵌入式 Web 管理界面**: 后端直接 serve 静态 HTML/JS，无需额外前端部署，适合原型期快速验证
 
+#### JWT 认证体系
+
+三文件架构（`security.py` + `deps.py` + `__init__.py`），bcrypt 密码哈希 + JWT access/refresh 双 token。FastAPI 依赖注入三级授权（`get_current_user` / `get_current_user_optional` / `require_admin`）。临时密钥自动生成（开发体验优先）但日志 WARNING 提醒。
+
+#### MCP Server（7 工具）
+
+`src/mcp/server.py` 实现 search_content / list_subscriptions / create_subscription / analyze_url / analyze_author / get_trending / get_stats。部分工具通过 HTTP 回调主 API 而非直接操作 DB——解耦 MCP 进程与主服务。
+
+#### AG-UI JSON 提取 6 层 Fallback
+
+`agui_client.py` 的 `extract_json()` 实现了从简单到复杂的 6 层解析：直接解析 → strict=False → Markdown 代码块提取 → 贪婪 `{}` + 中日韩引号归一化 → 控制字符清理 + trailing comma → 字符级状态机修复未转义双引号。这是 `llm-json-parser` Pattern 的深度强化版。
+
+#### 多 Agent 分治 + 双 Token 认证
+
+AG-UI 客户端支持 3 个独立 Agent（content / trend / recommend），各有独立 agent_id 和 api_key。认证通过 key 前缀 `knot_` 自动区分智能体 token vs 用户 token。
+
+#### 用户内容推送模型（Phase 3）
+
+`UserContentFeed` 表实现用户级内容推送 + 已读/未读追踪。User 模型的 `mode` 字段（global/custom）支持管理员全局订阅和用户个人订阅双轨模式。
+
+#### YouTube 字幕提取双层容错
+
+`TranscriptService` 主用免费 `youtube-transcript-api`（同步库需 `run_in_executor` 包装），失败 fallback 到付费 ScrapeCreators。多语言优先级：en → zh-Hans → zh-Hant → zh → ja → ko。
+
+#### 飞书消息模板（4 种模板 + 双类型自适应）
+
+- `FeishuClient` 自动检测流程 Webhook（纯文本）vs 传统群机器人（Markdown 卡片），响应格式兼容三种（`code:0` / `StatusCode:0` / `msg:success`）
+- 4 种消息模板演进：`build_content_notification`（单条）→ `build_ai_digest`（AI 精选摘要）→ `build_daily_report`（日报）→ `build_briefing`（Phase 3 批量简报）
+- `_render_ai_summary()` 防御性渲染：兼容 dict/raw_response/plain str 三种 AI 返回格式
+
 ---
 
 ## 做得不好的地方
@@ -324,8 +354,19 @@ infohunter/
 
 ---
 
+## 关联项目
+
+| 项目 | 关系 | 说明 |
+|------|------|------|
+| **infohunter-client** | 配套前端 | Monorepo 双端客户端，独立档案 |
+| **truthsocial-trump-monitor** | AG-UI 复用 | 共享 AG-UI 客户端模式和 MySQL |
+| **github-sentinel** | 架构相似 | 同类数据管道系统，共享基础设施 |
+
+---
+
 ## 元数据
 
 - **沉淀时间**: 2026-02-25
-- **信息来源**: 对话历史（多轮迭代开发过程）、代码分析、git log
-- **覆盖度评估**: 约 85%。覆盖了主要的架构决策、踩坑记录和演进过程。可能遗漏的：(1) 前端 React monorepo 的具体经验（infohunter-client 侧）(2) Expo/RN 移动端的踩坑 (3) 飞书消息模板的迭代细节
+- **门控审核**: 2026-02-25（增补内容融入主体结构，消除追加日志式组织）
+- **信息来源**: 对话历史（多轮迭代）、代码分析、git log、深度代码扫描
+- **覆盖度评估**: 约 95%。遗漏：(1) 前端经验已独立为 infohunter-client 档案 (2) 生产环境运维具体数据
