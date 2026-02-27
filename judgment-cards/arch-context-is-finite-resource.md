@@ -23,5 +23,16 @@
 ### 反面论证
 反对观点：更大的上下文窗口（如 Gemini 2M）可能让精简策略变得不必要；过度压缩上下文可能丢失关键信息导致决策质量下降。仍坚持本判断的原因：信噪比优化在任何窗口大小下都有价值（大窗口只是提高了上限，不消除 rot）；Manus 的 append-only 策略和 Anthropic 的 attention budget 理论在生产环境中已被验证。
 
+### 新增实证：SkillsBench 量化验证（2026-02-27）
+
+SkillsBench（BenchFlow + Stanford/CMU/UC Berkeley 等联合研究，7,308 次执行轨迹）从 Agent Skill 注入维度为本卡片提供了大规模量化证据：
+
+| 证据 | 数据 | 支撑点 |
+|------|------|--------|
+| 全面型 Skill 有害 | Comprehensive 型文档导致通过率 -2.9pp | 过度阐释消耗上下文预算，直接验证"精准胜于丰富" |
+| 精准知识缩短搜索空间 | Gemini 3 Pro 接入 Skill 后输入 Token 反降 6% | 结构化程序性知识阻断无效探索路径 |
+| 模块数量阈值 | 2-3 模块 +18.6pp → ≥4 模块仅 +5.9pp | 上下文噪音阈值的量化标定 |
+| 小模型代偿 | Flash 消耗 1.08M tokens（Pro 的 2.3 倍）弥补推理不足 | 上下文预算与推理深度的直接竞争关系 |
+
 ### 验证状态
-部分验证于 InfoHunter（AG-UI 上下文管理）、TruthSocial Monitor（多步工具链），待更大规模验证
+部分验证于 InfoHunter（AG-UI 上下文管理）、TruthSocial Monitor（多步工具链）；SkillsBench 论文提供了 7,308 次轨迹的大规模实证支持（2026-02-27 补充）
