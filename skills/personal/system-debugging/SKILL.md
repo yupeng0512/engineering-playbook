@@ -1,11 +1,18 @@
 ---
-name: system-debugging
-description: 系统调试专家。当用户表达"调试"、"排查问题"、"Bug 修复"、"报错"、"异常"、"不工作"、"出问题了"、"崩溃"、"失败"、"错误日志"、"定位问题"、"根本原因"等意图时触发。采用系统化调试方法论，强制根本原因分析，禁止猜测修复。
+name: debug-mode
+description: 结构化调试专家（Debug Mode）。用真实运行日志驱动 bug 排查，禁止猜测式修复。当用户遇到 bug、报错、异常行为、测试失败，或多轮对话仍未解决问题时触发。即使用户只是说"这里有问题"、"跑不通"、"行为不对"、"帮我调一下"，也应触发。当同一 bug 已经尝试修复 2 次仍未解决时，强制进入此模式。
 ---
 
-# 系统调试专家
+# Debug Mode — 日志驱动的结构化调试
 
-你是系统调试专家，采用**系统化调试方法论**帮助定位和解决问题。**核心原则：没有根本原因分析，禁止任何修复尝试。**
+你是系统调试专家，采用**日志驱动的结构化调试方法论**帮助定位和解决问题。
+
+**核心原则：永远基于真实运行数据定位 bug，禁止基于描述或猜测修复。**
+
+```
+猜测式调试：用户描述问题 → AI 猜原因 → 改代码 → 不对 → 再猜 → 循环...
+日志式调试：捕获真实运行数据 → 证据定位根因 → 精确修复 → 验证 → 清理
+```
 
 ---
 
@@ -258,6 +265,86 @@ python manage.py shell
 >>> MyModel.objects.filter(status='error').count()
 ```
 
+### 自动插桩（INSTRUMENT）
+
+验证假设时，在代码关键路径注入**临时诊断日志**。所有插桩代码必须带统一标记 `[DEBUG-MODE]`，方便后续一键清理。
+
+#### 插桩标记规范
+
+```python
+# Python
+print(f"[DEBUG-MODE] {variable_name}={variable_value}")
+```
+
+```javascript
+// JavaScript / TypeScript
+console.log(`[DEBUG-MODE] ${variableName}=`, variableValue);
+```
+
+```go
+// Go
+log.Printf("[DEBUG-MODE] %s=%v", "variableName", variableValue)
+```
+
+```bash
+# Shell
+echo "[DEBUG-MODE] variable=$variable"
+```
+
+#### 插桩模板（按场景）
+
+**场景 1：API / 网络请求**
+
+```python
+print(f"[DEBUG-MODE] Request: {method} {url}")
+print(f"[DEBUG-MODE] Headers: {dict(headers)}")
+print(f"[DEBUG-MODE] Body: {body[:500] if body else 'None'}")
+# ... 执行请求 ...
+print(f"[DEBUG-MODE] Response: status={resp.status_code}, body={resp.text[:500]}")
+```
+
+**场景 2：数据流转 / 状态变更**
+
+```python
+print(f"[DEBUG-MODE] BEFORE: {state_key}={old_value} (type={type(old_value).__name__})")
+# ... 执行变更 ...
+print(f"[DEBUG-MODE] AFTER: {state_key}={new_value} (type={type(new_value).__name__})")
+```
+
+**场景 3：条件分支 / 逻辑路径**
+
+```python
+print(f"[DEBUG-MODE] Condition: {condition_expr}={condition_result}")
+print(f"[DEBUG-MODE] Branch: {'TRUE' if condition_result else 'FALSE'}")
+```
+
+**场景 4：循环 / 迭代（采样，避免日志爆炸）**
+
+```python
+for i, item in enumerate(items):
+    if i < 3 or i == len(items) - 1:
+        print(f"[DEBUG-MODE] Loop[{i}/{len(items)}]: {item}")
+```
+
+**场景 5：异常 / 错误处理**
+
+```python
+try:
+    # ... 原始代码 ...
+except Exception as e:
+    import traceback
+    print(f"[DEBUG-MODE] Exception: {type(e).__name__}: {e}")
+    print(f"[DEBUG-MODE] Traceback:\n{traceback.format_exc()}")
+    raise  # 保持原始行为
+```
+
+#### 插桩守则
+
+1. **不改变程序行为**：只添加日志输出，不修改任何逻辑
+2. **不暴露敏感数据**：密码、Token、密钥用 `***` 替代
+3. **控制日志量**：循环内只采样（首 3 + 末 1），大对象截断到 500 字符
+4. **统一标记**：所有日志必须包含 `[DEBUG-MODE]` 以便清理
+
 ---
 
 ## Phase 4: FIX（验证修复）
@@ -333,6 +420,33 @@ def test_regression_issue_xxx():
 - **风险等级**：{高/中/低}
 - **回滚方案**：{如需回滚的步骤}
 ```
+
+### 清理闭环（CLEAN）
+
+修复确认后，**必须**清理所有插桩代码：
+
+```bash
+# 搜索项目中所有 DEBUG-MODE 标记
+rg "\[DEBUG-MODE\]" --files-with-matches
+
+# 确认清理完成（期望无结果）
+rg "\[DEBUG-MODE\]" .
+```
+
+清理检查项：
+- [ ] 所有 `[DEBUG-MODE]` 日志行已删除
+- [ ] 相关的 import 语句已清理（如 `import traceback`）
+- [ ] 代码恢复到修复前的干净状态（仅保留修复本身）
+
+---
+
+## 与其他 Skill 的协作
+
+| 场景 | 协作 Skill | 如何配合 |
+|------|-----------|----------|
+| Bug 修复后沉淀经验 | `project-retrospective` | 将调试报告的「经验总结」作为输入 |
+| 修复涉及架构问题 | `tech-review` | 修复后对受影响模块做架构评审 |
+| 修复完成后提交 | `gongfeng-mr` | 用调试报告作为 MR 描述的一部分 |
 
 ---
 
@@ -539,4 +653,4 @@ celery -A config inspect reserved
 ---
 
 **维护者**：全体团队成员  
-**最后更新**：2026-01-29
+**最后更新**：2026-03-02（合并 debug-mode 插桩闭环能力）
