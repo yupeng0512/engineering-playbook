@@ -1,3 +1,9 @@
+---
+title: mcp-server-development
+type: note
+permalink: engineering-playbook/patterns/mcp-server-development
+---
+
 # MCP Server 开发模式
 
 > 来源项目: TrendRadar、pinme-mcp、mcp_excalidraw、next-ai-draw-io、digital-twin、github-sentinel、mcp-gateway
@@ -118,25 +124,96 @@ tools/
 
 ## MCP 网关模式
 
-当有多个 MCP Server 需要统一暴露时，使用 Nginx 反向代理：
+当有多个 MCP Server 需要统一暴露时，需通过反向代理统一入口。
 
-```nginx
-upstream trendradar_mcp { server trendradar_mcp:3333; }
-upstream pinme_mcp      { server pinme_mcp:3000; }
+### 演进历史
 
-location /trendradar { proxy_pass http://trendradar_mcp; }
-location /pinme      { proxy_pass http://pinme_mcp; }
+| 阶段 | 方案 | 端口 | 状态 |
+|------|------|------|------|
+| v1 | Nginx 反代 (`mcp-gateway`) | 443 | 已退役 |
+| v2 | **Traefik PathPrefix 路由** | 80 | 当前方案 |
+
+### 当前方案：Traefik PathPrefix 路由
+
+所有 MCP 服务共享 Traefik 的 80 端口，通过 PathPrefix 区分。
+同时保留 Host 域名路由供本地 `.dev.local` 访问。
+
+**Docker Compose labels 模板**:
+
+```yaml
+labels:
+  # 本地访问：http://my-mcp.dev.local/mcp
+  - "traefik.enable=true"
+  - "traefik.http.routers.my-mcp.rule=Host(`my-mcp.dev.local`)"
+  - "traefik.http.routers.my-mcp.entrypoints=web"
+  - "traefik.http.services.my-mcp.loadbalancer.server.port=3000"
+  # Knot/远程访问：http://9.135.86.144/my-mcp/mcp
+  - "traefik.http.routers.my-mcp-knot.rule=PathPrefix(`/my-mcp`)"
+  - "traefik.http.routers.my-mcp-knot.entrypoints=web"
+  - "traefik.http.routers.my-mcp-knot.middlewares=my-mcp-strip"
+  - "traefik.http.routers.my-mcp-knot.service=my-mcp"
+  - "traefik.http.middlewares.my-mcp-strip.stripprefix.prefixes=/my-mcp"
 ```
 
-**关键配置（SSE 兼容）**:
-```nginx
-proxy_buffering off;
-chunked_transfer_encoding on;
-proxy_set_header Connection '';
-proxy_read_timeout 300s;
+**原理**: Traefik 的 `stripprefix` 中间件将 `/my-mcp/mcp` → `/mcp` 转发给容器，容器无需感知路径前缀。
+
+### DevCloud (Knot 平台) 部署约束
+
+Knot 平台通过 `security_zone: "devnet"` 连接 DevCloud 机器上的 MCP 服务，有以下硬性约束：
+
+**端口白名单**: 仅支持 **80、443、8080、8081** 四个端口。其他端口（如 3000、3100、3333）不可达。
+
+**Knot MCP JSON 模板**:
+
+```json
+{
+  "mcpServers": {
+    "my_mcp": {
+      "security_zone": "devnet",
+      "url": "http://<MACHINE_IP>/my-mcp/mcp",
+      "timeout": 60
+    }
+  }
+}
 ```
 
-**注意**: 上游容器重启时网关返回 502，需要配置健康检查或自动重试。
+**注意事项**:
+- `security_zone` 必须为 `"devnet"`，这是 Knot 连接内网 MCP 的必要标识
+- URL 使用机器 IP（如 `9.135.86.144`），不能用 `.dev.local` 域名（Knot 无法解析）
+- 端口必须是 80/443/8080/8081 之一，推荐走 Traefik 的 80 端口 + PathPrefix
+
+**接入新 MCP 的 Checklist**:
+
+```
+□ 1. 容器加入 traefik-net 网络
+□ 2. 添加 PathPrefix Traefik labels（见上方模板）
+□ 3. 选择唯一的 PathPrefix（如 /my-mcp）
+□ 4. 验证：curl http://<IP>/my-mcp/mcp -X POST ...
+□ 5. 在 Knot 平台添加 MCP 配置（security_zone=devnet）
+□ 6. 更新 ports-registry.yaml
+```
+
+### 历史方案：Nginx 反代（已退役）
+
+```nginx
+upstream trendradar_mcp { server trendradar_mcp:3333; keepalive 32; }
+
+location /trendradar {
+    proxy_pass http://trendradar_mcp/mcp;
+    proxy_buffering off;
+    chunked_transfer_encoding on;
+    proxy_set_header Connection '';
+    proxy_read_timeout 300s;
+}
+```
+
+已被 Traefik 替代。旧配置保留在 `/data/workspace/mcp-gateway/nginx.conf` 供参考。
+
+### 实际项目参考
+
+| MCP 服务 | PathPrefix | 容器端口 | Knot URL |
+|----------|-----------|---------|----------|
+| fetch-mcp | `/fetch-mcp` | 3000 | `http://9.135.86.144/fetch-mcp/mcp` |
 
 ---
 
@@ -170,8 +247,9 @@ fastmcp>=2.12.0,<2.14.0
 | 场景 | 推荐模式 | 原因 |
 |------|---------|------|
 | Cursor/Claude Desktop 本地 | stdio | 零配置，直接启动 |
-| 远程服务/多用户 | HTTP (SSE) | 网络可达，可负载均衡 |
+| 远程服务/多用户 | HTTP (SSE/Streamable HTTP) | 网络可达，可负载均衡 |
 | Docker 容器内 | stdio + docker exec | 隔离性好 |
+| **Knot/DevCloud 远程平台** | **Streamable HTTP + Traefik PathPrefix** | 端口受限(80/443/8080/8081)，需 `security_zone: "devnet"` |
 
 ### 3. 工具返回值格式
 
@@ -206,7 +284,7 @@ services:
 | MCP 框架选型 | 反复调研对比 | 按语言/场景直接选型 |
 | 工具组织 | 全部堆在一个文件 | 分类分文件，清晰可维护 |
 | 部署模式 | 试错 stdio/HTTP/Docker | 按场景表直接选择 |
-| 多服务暴露 | 每个服务单独配置 | 统一 Nginx 网关 |
+| 多服务暴露 | 每个服务单独配置 | Traefik PathPrefix 统一 80 端口 |
 
 ---
 

@@ -1,3 +1,9 @@
+---
+title: github-sentinel
+type: note
+permalink: engineering-playbook/knowledge-base/github-sentinel
+---
+
 # GitHub Sentinel 完整经验档案
 
 > 项目周期: 2025 ~ 进行中
@@ -65,7 +71,7 @@ FastAPI → React Dashboard / MCP Server
 - **技术**: GitHub REST API + GraphQL + BigQuery (GH Archive)
 - **场景**: 不同时间范围的热门项目查询
 - **选择理由**: 短期(≤3天)用 GitHub API 免费实时，长期用 BigQuery 回溯到 2011 年
-- **实际效果**: auto 模式根据查询参数自动选择，BigQuery 不可用时自动降级到 GitHub
+- **实际效果**: auto 模式根据查询参数自动选择；后续又补了一层“长窗口成本保护”，对 `30d` 这类高扫描窗口直接走 GitHub fallback，把 BigQuery 留给 4-14 天这种信号/成本比更高的区间
 - **推荐指数**: 5/5
 - **适用建议**: 数据源成本不均时，按查询特征路由是最佳实践
 
@@ -132,6 +138,7 @@ FastAPI → React Dashboard / MCP Server
 - **现象**: 每小时查询导致 BigQuery 账单快速增长
 - **根因**: 初始版本每小时全量查询 GH Archive，每次扫描大量数据
 - **解决方案**: (1) 查询频率从每小时降到每 6 小时 (2) 文件缓存避免重复查询 (3) 免费额度监控告警
+- **进一步优化**: 缓存 TTL 不能一刀切。7 天窗口至少按“天”复用，30 天窗口要么走更长 TTL，要么直接回退到便宜但近似的替代数据源
 - **预防建议**: 云服务调用必须在 MVP 阶段就设计成本监控和预算上限
 
 #### 坑 2: 企业微信消息长度截断
@@ -165,6 +172,22 @@ FastAPI → React Dashboard / MCP Server
 - **根因**: GraphQL 批量查询可能返回 None
 - **解决方案**: 专门的 `fill_missing_descriptions` 定时任务补数据
 - **预防建议**: 批量数据采集后需要有数据完整性检查和补偿机制
+
+#### 坑 6: compile 通过不代表兼容链路真的可用
+
+- **影响程度**: 中
+- **现象**: 新多榜单主路径都正常，但老的 `hotness` 推送链路因为缺少 `ReportRenderer` 运行时导入，只有真正触发兼容路径时才会报错
+- **根因**: `compileall` 和多数单测主要覆盖主路径，无法发现“函数体内部才引用的遗漏符号”
+- **解决方案**: 为保留的兼容接口至少补 1 条真正执行到渲染层的 smoke/unit test；不要只验证新 API
+- **预防建议**: 重构时如果保留 legacy path，就把它们当作独立产品面来测试，而不是默认“没动就没风险”
+
+#### 坑 7: 通知服务要区分“有渠道”与“推送成功”
+
+- **影响程度**: 中
+- **现象**: 若渠道已配置但两个 Webhook 都失败，服务仍可能返回 `sent`，造成运维与手动推送反馈过于乐观
+- **根因**: 状态判断只看 `None / not None`，没有把 `False` 作为失败结果单独建模
+- **解决方案**: 统一返回 `skipped / failed / partial / sent` 四态，并让 API/调度日志按真实结果展示
+- **预防建议**: 外部副作用型服务不能只回答“有没有尝试”，必须回答“有没有成功”
 
 ### 决策失误
 

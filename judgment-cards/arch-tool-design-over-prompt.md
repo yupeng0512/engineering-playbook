@@ -1,3 +1,9 @@
+---
+title: arch-tool-design-over-prompt
+type: note
+permalink: engineering-playbook/judgment-cards/arch-tool-design-over-prompt
+---
+
 ## 判断力卡片：Agent 工具设计的投入回报远超提示工程
 
 > 来源: Anthropic "Writing Effective Tools for Agents" + Building Effective Agents
@@ -23,4 +29,13 @@
 反对观点：提示工程的灵活性更高、迭代更快，工具一旦定型修改成本大；在快速原型阶段不应过早优化工具。仍坚持本判断的原因：工具设计错误的代价远大于提示错误——坏的工具接口导致 Agent 系统性失败，而坏的提示通常只影响局部质量；防呆设计（如强制绝对路径、禁止 diff 格式）一旦实施，永久性地消除整类错误。
 
 ### 验证状态
-已验证于 Anthropic SWE-bench（工具优化后准确率 +30%），待个人项目验证元循环自举的实际效果
+已验证于 Anthropic SWE-bench
+
+### GDI 评分 (v1.0)
+| 维度 | 分值 | 说明 |
+|------|------|------|
+| 内在质量 (Q) | 1.00 | 已验证 (Anthropic SWE-bench) |
+| 使用频次 (U) | 0.80 | 4 次项目引用 |
+| 反馈信号 (S) | 0.83 | 4 成功 / 0 失败 |
+| 新鲜度 (F) | 0.85 | 更新于 2026-02-25 |
+| **GDI 综合** | **0.90** | 最高优先级卡片 |（工具优化后准确率 +30%），待个人项目验证元循环自举的实际效果
