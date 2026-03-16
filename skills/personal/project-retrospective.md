@@ -1,6 +1,8 @@
 ---
 name: project-retrospective
-description: 项目经验沉淀与复用专家。当用户表达"沉淀项目经验"、"项目复盘"、"总结踩坑"、"经验归档"、"查看相关经验"、"有没有类似的坑"等意图时触发。专注于项目阶段完结或里程碑时的系统性经验提取、归档和跨项目复用。注意：如需日常开发中查阅/更新项目知识库，请使用 knowledge-base Skill。
+description: 项目经验沉淀与复用专家。当用户表达"沉淀项目经验"、"项目复盘"、"总结踩坑"、"经验归档"、"查看相关经验"、"有没有类似的坑"等意图时触发。专注于项目阶段完结或里程碑时的系统性经验提取、归档和跨项目复用。注意：如需日常开发中查阅/更新项目知识库，请使用
+  knowledge-base Skill。
+permalink: engineering-playbook/skills/personal/project-retrospective
 ---
 
 # 项目经验沉淀与复用专家

@@ -1,3 +1,9 @@
+---
+title: token-efficient-tool-selection
+type: note
+permalink: engineering-playbook/patterns/token-efficient-tool-selection
+---
+
 # Pattern: Token 效率优先的工具选择
 
 > 来源项目: ops-dashboard | 推荐指数: 4/5 | 适用范围: 所有 AI 辅助开发场景（Cursor / Copilot 等）

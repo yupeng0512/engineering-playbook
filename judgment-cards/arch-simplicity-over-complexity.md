@@ -1,3 +1,9 @@
+---
+title: arch-simplicity-over-complexity
+type: note
+permalink: engineering-playbook/judgment-cards/arch-simplicity-over-complexity
+---
+
 ## 判断力卡片：AI Agent 架构选型——简单性优先
 
 > 来源: Anthropic 构建有效 AI Agent 的实践指南 (Erik Schluntz & Barry Zhang)

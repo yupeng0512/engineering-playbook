@@ -1,6 +1,9 @@
 ---
 name: gongfeng-mr
-description: 工蜂 MR 提交助手。当用户表达"提交代码"、"创建 MR"、"提 MR"、"push 代码"、"合并请求"、"关联 TAPD"、"commit"、"提交到工蜂"、"代码审查"、"code review"、"自检"等意图时触发。自动总结变更、生成规范 Commit Message、关联 TAPD 单据、创建 Merge Request，并提供 Code Review 自检清单。
+description: 工蜂 MR 提交助手。当用户表达"提交代码"、"创建 MR"、"提 MR"、"push 代码"、"合并请求"、"关联 TAPD"、"commit"、"提交到工蜂"、"代码审查"、"code
+  review"、"自检"等意图时触发。自动总结变更、生成规范 Commit Message、关联 TAPD 单据、创建 Merge Request，并提供 Code
+  Review 自检清单。
+permalink: engineering-playbook/skills/personal/gongfeng-mr/skill
 ---
 
 # 工蜂 MR 提交助手

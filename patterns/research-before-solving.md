@@ -1,3 +1,9 @@
+---
+title: research-before-solving
+type: note
+permalink: engineering-playbook/patterns/research-before-solving
+---
+
 # Pattern: 遇到问题先调研（Research Before Solving）
 
 > 来源: trading-system Polymarket API 网络问题的反思

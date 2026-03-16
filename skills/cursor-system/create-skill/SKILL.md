@@ -1,7 +1,11 @@
 ---
 name: create-skill
-description: Guides users through creating effective Agent Skills for Cursor. Use when you want to create, write, or author a new skill, or asks about skill structure, best practices, or SKILL.md format.
+description: Guides users through creating effective Agent Skills for Cursor. Use
+  when you want to create, write, or author a new skill, or asks about skill structure,
+  best practices, or SKILL.md format.
+permalink: engineering-playbook/skills/cursor-system/create-skill/skill
 ---
+
 # Creating Skills in Cursor
 
 This skill guides you through creating effective Agent Skills for Cursor. Skills are markdown files that teach the agent how to perform specific tasks: reviewing PRs using team standards, generating commit messages in a preferred format, querying database schemas, or any specialized workflow.

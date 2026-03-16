@@ -1,3 +1,9 @@
+---
+title: stagehand-browser-automation
+type: note
+permalink: engineering-playbook/patterns/stagehand-browser-automation
+---
+
 # Stagehand 浏览器自动化模式：代码 + AI 混合控制
 
 > 来源: Stagehand 框架调研与实践 (https://github.com/browserbase/stagehand)

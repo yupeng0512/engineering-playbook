@@ -1,3 +1,9 @@
+---
+title: arch-context-is-finite-resource
+type: note
+permalink: engineering-playbook/judgment-cards/arch-context-is-finite-resource
+---
+
 ## 判断力卡片：上下文是有限资源，精准胜于丰富
 
 > 来源: Anthropic Context Engineering + Manus 上下文工程六大原则

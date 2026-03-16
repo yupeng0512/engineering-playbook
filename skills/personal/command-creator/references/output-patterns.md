@@ -1,3 +1,9 @@
+---
+title: output-patterns
+type: note
+permalink: engineering-playbook/skills/personal/command-creator/references/output-patterns
+---
+
 # 输出模式指南
 
 当 Skill 需要产生一致、高质量的输出时，使用以下模式。

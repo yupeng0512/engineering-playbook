@@ -1,3 +1,9 @@
+---
+title: knowledge-share
+type: note
+permalink: engineering-playbook/skills/personal/share-writer/templates/knowledge-share
+---
+
 # 知识类分享模板
 
 用于技术概念讲解、原理解析、方法论介绍等知识分享场景。

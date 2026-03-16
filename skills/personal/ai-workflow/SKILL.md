@@ -1,6 +1,8 @@
 ---
 name: ai-workflow
-description: AI Native 开发工作流总纲。此 Skill 必须在处理任何任务前自动检查并加载。当收到用户消息时，强制检查是否有适用的 Skill，并按正确的顺序加载和执行。确保 AI 按照规范化的工作流完成任务，避免跳过关键步骤。
+description: AI Native 开发工作流总纲。此 Skill 必须在处理任何任务前自动检查并加载。当收到用户消息时，强制检查是否有适用的 Skill，并按正确的顺序加载和执行。确保
+  AI 按照规范化的工作流完成任务，避免跳过关键步骤。
+permalink: engineering-playbook/skills/personal/ai-workflow/skill
 ---
 
 # AI Native 开发工作流总纲

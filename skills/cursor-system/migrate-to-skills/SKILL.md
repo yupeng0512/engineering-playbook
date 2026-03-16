@@ -1,8 +1,13 @@
 ---
 name: migrate-to-skills
-description: Convert 'Applied intelligently' Cursor rules (.cursor/rules/*.mdc) and slash commands (.cursor/commands/*.md) to Agent Skills format (.cursor/skills/). Use when you want to migrate rules or commands to skills, convert .mdc rules to SKILL.md format, or consolidate commands into the skills directory.
+description: Convert 'Applied intelligently' Cursor rules (.cursor/rules/*.mdc) and
+  slash commands (.cursor/commands/*.md) to Agent Skills format (.cursor/skills/).
+  Use when you want to migrate rules or commands to skills, convert .mdc rules to
+  SKILL.md format, or consolidate commands into the skills directory.
 disable-model-invocation: true
+permalink: engineering-playbook/skills/cursor-system/migrate-to-skills/skill
 ---
+
 # Migrate Rules and Slash Commands to Skills
 
 Convert Cursor rules ("Applied intelligently") and slash commands to Agent Skills format.

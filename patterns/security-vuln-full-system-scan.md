@@ -1,3 +1,9 @@
+---
+title: security-vuln-full-system-scan
+type: note
+permalink: engineering-playbook/patterns/security-vuln-full-system-scan
+---
+
 # Pattern: 安全漏洞修复 — 全系统扫描思维
 
 > 来源项目: infohunter-client / ops-dashboard | 推荐指数: 5/5 | 适用范围: 开发机上处理高危组件漏洞工单

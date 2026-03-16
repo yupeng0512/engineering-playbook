@@ -1,3 +1,9 @@
+---
+title: SKILL
+type: note
+permalink: engineering-playbook/skills/personal/tech-review/skill
+---
+
 # Tech Review - 技术架构评审专家
 
 > 融合 ATAM、AWS Well-Architected Framework、Martin Fowler 架构原则的专业评审助手

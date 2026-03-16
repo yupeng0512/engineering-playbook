@@ -1,3 +1,9 @@
+---
+title: skill-taxonomy
+type: note
+permalink: engineering-playbook/skills/personal/skill-from-masters/references/skill-taxonomy
+---
+
 # Skill Taxonomy - Skill 类型分类体系
 
 > 11 种 Skill 类型，帮助快速定位方法论和设计模式

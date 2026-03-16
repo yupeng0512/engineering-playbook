@@ -1,3 +1,9 @@
+---
+title: risk-stop-loss-first
+type: note
+permalink: engineering-playbook/judgment-cards/risk-stop-loss-first
+---
+
 ## 判断力卡片：杠杆交易中的风险决策
 
 > 来源: trading-learning/sessions/2025-12-31/session-notes.md

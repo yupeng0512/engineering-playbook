@@ -1,3 +1,9 @@
+---
+title: knowledge-note
+type: note
+permalink: engineering-playbook/skills/personal/article-tutor/templates/knowledge-note
+---
+
 # 知识类笔记模板
 
 用于技术博客、学术论文、专业书籍章节等知识内容。

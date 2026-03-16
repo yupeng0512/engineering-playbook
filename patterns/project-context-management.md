@@ -1,3 +1,9 @@
+---
+title: project-context-management
+type: note
+permalink: engineering-playbook/patterns/project-context-management
+---
+
 # Pattern: 项目上下文管理
 
 > 来源: trading-system, claws, infohunter, digital-twin 多项目实践总结

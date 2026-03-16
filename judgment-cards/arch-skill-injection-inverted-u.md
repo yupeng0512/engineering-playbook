@@ -1,3 +1,9 @@
+---
+title: arch-skill-injection-inverted-u
+type: note
+permalink: engineering-playbook/judgment-cards/arch-skill-injection-inverted-u
+---
+
 ## 判断力卡片：Skill 注入的倒 U 型增益法则——精准挂载胜于全面覆盖
 
 > 来源: SkillsBench: Benchmarking How Well Agent Skills Work Across Diverse Tasks (BenchFlow + Amazon/ByteDance/Foxconn + Stanford/CMU/UC Berkeley/Columbia/Oxford)

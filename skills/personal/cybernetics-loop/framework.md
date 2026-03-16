@@ -1,3 +1,9 @@
+---
+title: framework
+type: note
+permalink: engineering-playbook/skills/personal/cybernetics-loop/framework
+---
+
 # 控制论 + Tutor 架构 — 框架详解
 
 ## 理论根节点

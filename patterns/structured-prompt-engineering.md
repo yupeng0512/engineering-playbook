@@ -1,3 +1,9 @@
+---
+title: structured-prompt-engineering
+type: note
+permalink: engineering-playbook/patterns/structured-prompt-engineering
+---
+
 # Pattern: 结构化 Prompt 工程
 
 > 来源项目: InfoHunter | 推荐指数: 5/5 | 适用范围: 任何需要 LLM 输出结构化分析结果的场景

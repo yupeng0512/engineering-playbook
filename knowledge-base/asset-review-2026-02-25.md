@@ -1,3 +1,9 @@
+---
+title: asset-review-2026-02-25
+type: note
+permalink: engineering-playbook/knowledge-base/asset-review-2026-02-25
+---
+
 # Engineering Playbook 资产全量评估报告（修复后）
 
 > 评估日期：2026-02-25（第二轮，修复后重评）

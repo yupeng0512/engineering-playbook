@@ -1,6 +1,9 @@
 ---
 name: command-creator
-description: Command/Skill 创建专家。当用户表达"创建 command"、"新建 skill"、"做一个命令"、"写个 skill"、"command 生成"、"创建技能"、"skill 模板"等意图时自动触发。帮助设计和创建符合平台规范的 Command/Skill 文件，支持 Cursor 和 CodeBuddy 双平台，从简单指令到复杂技能包的全场景覆盖。
+description: Command/Skill 创建专家。当用户表达"创建 command"、"新建 skill"、"做一个命令"、"写个 skill"、"command
+  生成"、"创建技能"、"skill 模板"等意图时自动触发。帮助设计和创建符合平台规范的 Command/Skill 文件，支持 Cursor 和 CodeBuddy
+  双平台，从简单指令到复杂技能包的全场景覆盖。
+permalink: engineering-playbook/skills/personal/command-creator/skill
 ---
 
 # Command/Skill 创建专家

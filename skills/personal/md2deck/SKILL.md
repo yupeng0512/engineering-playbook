@@ -1,3 +1,9 @@
+---
+title: SKILL
+type: note
+permalink: engineering-playbook/skills/personal/md2deck/skill
+---
+
 # md2deck — Markdown 投研报告 → 演示文稿生成 Skill
 
 ## Description

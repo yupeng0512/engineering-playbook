@@ -1,9 +1,11 @@
 ---
-description: Slidev 路演演示文稿生成 Skill。将 Markdown 投研报告/商业计划书自动转换为 Slidev 格式的交互式路演演示文稿。当用户需要将投研报告、BP 文档转换为路演 PPT/演示文稿，或需要创建 Slidev 幻灯片时，调用此 Skill。
+description: Slidev 路演演示文稿生成 Skill。将 Markdown 投研报告/商业计划书自动转换为 Slidev 格式的交互式路演演示文稿。当用户需要将投研报告、BP
+  文档转换为路演 PPT/演示文稿，或需要创建 Slidev 幻灯片时，调用此 Skill。
 alwaysApply: false
 enabled: true
-updatedAt: 2026-02-25T11:26:56.485Z
-provider: 
+updatedAt: 2026-02-25 11:26:56.485000+00:00
+provider: null
+permalink: engineering-playbook/skills/personal/slidev-pitch-deck/skill
 ---
 
 # Slidev 路演演示文稿生成 Skill（Slidev Pitch Deck Generator）

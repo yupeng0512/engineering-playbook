@@ -1,6 +1,8 @@
 ---
 name: share-writer
-description: 分享文章编写助手。根据用户主题或素材，生成适合团队分享场景的结构化文档。支持知识类分享（概念/原理）和实践类分享（案例/教程）。遵循金字塔原理、MECE 原则和技术文档最佳实践。
+description: 分享文章编写助手。根据用户主题或素材，生成适合团队分享场景的结构化文档。支持知识类分享（概念/原理）和实践类分享（案例/教程）。遵循金字塔原理、MECE
+  原则和技术文档最佳实践。
+permalink: engineering-playbook/skills/personal/share-writer/skill
 ---
 
 # 分享文章编写助手

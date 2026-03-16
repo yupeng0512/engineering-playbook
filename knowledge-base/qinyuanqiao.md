@@ -1,3 +1,9 @@
+---
+title: qinyuanqiao
+type: note
+permalink: engineering-playbook/knowledge-base/qinyuanqiao
+---
+
 # 秦源桥小程序 完整经验档案
 
 > 项目周期: 2025 ~ MVP 完成待上线

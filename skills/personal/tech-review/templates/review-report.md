@@ -1,3 +1,9 @@
+---
+title: review-report
+type: note
+permalink: engineering-playbook/skills/personal/tech-review/templates/review-report
+---
+
 # 技术方案评审报告
 
 ## 基本信息

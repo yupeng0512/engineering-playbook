@@ -1,3 +1,9 @@
+---
+title: llm-json-parser
+type: note
+permalink: engineering-playbook/patterns/llm-json-parser
+---
+
 # Pattern: LLM JSON 清洗
 
 > 来源项目: InfoHunter, truthsocial-trump-monitor, next-ai-draw-io

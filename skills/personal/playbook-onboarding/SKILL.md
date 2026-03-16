@@ -1,6 +1,8 @@
 ---
 name: playbook-onboarding
-description: 批量经验沉淀编排专家。当用户表达"初始化经验仓库"、"批量沉淀"、"全量 Review"、"扫描 workspace"、"继续上次的沉淀进度"等意图时触发。负责扫描 workspace 全部项目、分批排序、持久化跟踪进度，并逐个调用 project-retrospective 完成深度 Review。适用于新用户首次接入仓库、或需要系统性补全经验资产的场景。
+description: 批量经验沉淀编排专家。当用户表达"初始化经验仓库"、"批量沉淀"、"全量 Review"、"扫描 workspace"、"继续上次的沉淀进度"等意图时触发。负责扫描
+  workspace 全部项目、分批排序、持久化跟踪进度，并逐个调用 project-retrospective 完成深度 Review。适用于新用户首次接入仓库、或需要系统性补全经验资产的场景。
+permalink: engineering-playbook/skills/personal/playbook-onboarding/skill
 ---
 
 # 批量经验沉淀编排专家

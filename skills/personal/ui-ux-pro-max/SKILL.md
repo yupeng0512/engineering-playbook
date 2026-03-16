@@ -1,6 +1,15 @@
 ---
 name: ui-ux-pro-max
-description: "UI/UX design intelligence. 57 styles, 95 palettes, 56 font pairings, 24 charts, 8 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter, Tailwind). Actions: plan, build, create, design, implement, review, fix, improve, optimize, enhance, refactor, check UI/UX code. Projects: website, landing page, dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx, .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart. Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid, dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility, animation, layout, typography, font pairing, spacing, hover, shadow, gradient."
+description: 'UI/UX design intelligence. 57 styles, 95 palettes, 56 font pairings,
+  24 charts, 8 stacks (React, Next.js, Vue, Svelte, SwiftUI, React Native, Flutter,
+  Tailwind). Actions: plan, build, create, design, implement, review, fix, improve,
+  optimize, enhance, refactor, check UI/UX code. Projects: website, landing page,
+  dashboard, admin panel, e-commerce, SaaS, portfolio, blog, mobile app, .html, .tsx,
+  .vue, .svelte. Elements: button, modal, navbar, sidebar, card, table, form, chart.
+  Styles: glassmorphism, claymorphism, minimalism, brutalism, neumorphism, bento grid,
+  dark mode, responsive, skeuomorphism, flat design. Topics: color palette, accessibility,
+  animation, layout, typography, font pairing, spacing, hover, shadow, gradient.'
+permalink: engineering-playbook/skills/personal/ui-ux-pro-max/skill
 ---
 
 # UI/UX Pro Max - Design Intelligence (CodeBuddy 适配版)

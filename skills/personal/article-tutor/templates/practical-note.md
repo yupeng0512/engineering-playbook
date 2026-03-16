@@ -1,3 +1,9 @@
+---
+title: practical-note
+type: note
+permalink: engineering-playbook/skills/personal/article-tutor/templates/practical-note
+---
+
 # 实践类项目笔记模板
 
 用于开源工具、SDK、框架、CLI 工具等实践类项目。

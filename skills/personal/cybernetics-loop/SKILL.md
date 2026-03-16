@@ -1,6 +1,12 @@
 ---
 name: cybernetics-loop
-description: Design personal cybernetics systems for any goal using the Goal→Act→Sense→Compare→Adjust feedback loop. Combines Dan Koe's vision/anti-vision identity excavation with tutor-style knowledge architecture. Includes identity resistance handling, stage-adaptive design, and emotional sensing. Use when the user sets a goal, wants to design a self-improvement system, mentions cybernetics, feedback loops, goal tracking, iteration, or personal development.
+description: Design personal cybernetics systems for any goal using the Goal→Act→Sense→Compare→Adjust
+  feedback loop. Combines Dan Koe's vision/anti-vision identity excavation with tutor-style
+  knowledge architecture. Includes identity resistance handling, stage-adaptive design,
+  and emotional sensing. Use when the user sets a goal, wants to design a self-improvement
+  system, mentions cybernetics, feedback loops, goal tracking, iteration, or personal
+  development.
+permalink: engineering-playbook/skills/personal/cybernetics-loop/skill
 ---
 
 # Personal Cybernetics Loop Designer

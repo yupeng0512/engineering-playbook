@@ -1,3 +1,9 @@
+---
+title: digital-twin
+type: note
+permalink: engineering-playbook/knowledge-base/digital-twin
+---
+
 # Digital Twin 完整经验档案
 
 > 项目周期: 2025 ~ 进行中

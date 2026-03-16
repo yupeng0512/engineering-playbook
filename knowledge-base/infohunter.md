@@ -1,3 +1,9 @@
+---
+title: infohunter
+type: note
+permalink: engineering-playbook/knowledge-base/infohunter
+---
+
 # InfoHunter 完整经验档案
 
 > 项目周期: 2026-02 ~ 进行中

@@ -1,3 +1,9 @@
+---
+title: agui-protocol-integration
+type: note
+permalink: engineering-playbook/patterns/agui-protocol-integration
+---
+
 # SSE 流式 AI 客户端模式（AG-UI 协议实践）
 
 > 来源项目: truthsocial-trump-monitor, github-sentinel, infohunter

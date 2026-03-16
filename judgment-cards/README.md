@@ -1,3 +1,9 @@
+---
+title: README
+type: note
+permalink: engineering-playbook/judgment-cards/readme
+---
+
 # Judgment Cards — 判断力卡片精华库
 
 存放经过门控审核的跨领域通用判断力卡片。

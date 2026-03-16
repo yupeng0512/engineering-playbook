@@ -1,3 +1,9 @@
+---
+title: eng-research-before-solving
+type: note
+permalink: engineering-playbook/judgment-cards/eng-research-before-solving
+---
+
 # 判断力卡片: 遇到问题先调研
 
 ## 命题

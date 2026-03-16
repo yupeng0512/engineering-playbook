@@ -1,3 +1,9 @@
+---
+title: templates
+type: note
+permalink: engineering-playbook/skills/personal/cybernetics-loop/templates
+---
+
 # 模板文件
 
 ## 1. 系统设计模板（主输出文件）

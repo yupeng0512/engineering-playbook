@@ -1,3 +1,9 @@
+---
+title: meta-identity-shapes-action
+type: note
+permalink: engineering-playbook/judgment-cards/meta-identity-shapes-action
+---
+
 ## 判断力卡片：身份决定行为——改变视角比改变动作更重要
 
 > 来源: Dan Koe "How To Reinvent Your Life In One Day" + cybernetics-loop Skill

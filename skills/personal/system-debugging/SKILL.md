@@ -1,6 +1,8 @@
 ---
 name: debug-mode
-description: 结构化调试专家（Debug Mode）。用真实运行日志驱动 bug 排查，禁止猜测式修复。当用户遇到 bug、报错、异常行为、测试失败，或多轮对话仍未解决问题时触发。即使用户只是说"这里有问题"、"跑不通"、"行为不对"、"帮我调一下"，也应触发。当同一 bug 已经尝试修复 2 次仍未解决时，强制进入此模式。
+description: 结构化调试专家（Debug Mode）。用真实运行日志驱动 bug 排查，禁止猜测式修复。当用户遇到 bug、报错、异常行为、测试失败，或多轮对话仍未解决问题时触发。即使用户只是说"这里有问题"、"跑不通"、"行为不对"、"帮我调一下"，也应触发。当同一
+  bug 已经尝试修复 2 次仍未解决时，强制进入此模式。
+permalink: engineering-playbook/skills/personal/system-debugging/skill
 ---
 
 # Debug Mode — 日志驱动的结构化调试

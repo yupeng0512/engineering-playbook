@@ -1,3 +1,9 @@
+---
+title: quick-overview
+type: note
+permalink: engineering-playbook/skills/personal/article-tutor/templates/quick-overview
+---
+
 # 快速概览卡片模板
 
 ## 知识类内容（技术博客/论文/书籍）

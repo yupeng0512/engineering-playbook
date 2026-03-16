@@ -1,6 +1,8 @@
 ---
 name: skill-from-masters
-description: 从专家方法论创建 Skill。当用户需要创建新 Skill 时，自动搜索并融合领域专家的最佳实践、框架和方法论。适用于"创建 XX Skill"、"帮我做一个 XX 助手"、"需要一个 XX 工具"等场景。
+description: 从专家方法论创建 Skill。当用户需要创建新 Skill 时，自动搜索并融合领域专家的最佳实践、框架和方法论。适用于"创建 XX Skill"、"帮我做一个
+  XX 助手"、"需要一个 XX 工具"等场景。
+permalink: engineering-playbook/skills/personal/skill-from-masters/skill
 ---
 
 # Skill From Masters - 站在巨人肩膀上创建 Skill

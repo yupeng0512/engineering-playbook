@@ -1,6 +1,8 @@
 ---
 name: yt-dlp
-description: YouTube 和视频下载助手。当用户需要下载视频、提取音频、下载播放列表时触发。支持 YouTube、B站等数千个网站，提供格式选择、质量控制、Cookie 认证等功能。
+description: YouTube 和视频下载助手。当用户需要下载视频、提取音频、下载播放列表时触发。支持 YouTube、B站等数千个网站，提供格式选择、质量控制、Cookie
+  认证等功能。
+permalink: engineering-playbook/skills/personal/yt-dlp/skill
 ---
 
 # yt-dlp

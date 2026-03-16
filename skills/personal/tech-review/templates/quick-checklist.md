@@ -1,3 +1,9 @@
+---
+title: quick-checklist
+type: note
+permalink: engineering-playbook/skills/personal/tech-review/templates/quick-checklist
+---
+
 # 技术方案快速评审清单
 
 > 用于快速扫描技术方案，识别主要风险点。每个维度选择 2-3 个最关键的问题。

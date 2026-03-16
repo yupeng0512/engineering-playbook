@@ -1,6 +1,7 @@
 ---
 name: defense-in-depth
 description: 深度防御与安全检查专家。当用户表达"安全检查"、"安全审计"、"漏洞检查"、"代码安全"、"防御"、"安全扫描"、"风险评估"、"SQL注入"、"XSS"、"权限检查"、"敏感数据"、"安全加固"等意图时触发。采用多层防御策略，确保代码和系统的安全性。
+permalink: engineering-playbook/skills/personal/defense-in-depth/skill
 ---
 
 # 深度防御与安全检查专家

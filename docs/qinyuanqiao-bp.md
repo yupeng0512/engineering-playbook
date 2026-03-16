@@ -1,3 +1,9 @@
+---
+title: qinyuanqiao-bp
+type: note
+permalink: engineering-playbook/docs/qinyuanqiao-bp
+---
+
 # 亲缘桥（QinYuanQiao）—— 投资研究报告 & 商业计划书
 
 > **Confidential | 仅供投资人审阅**

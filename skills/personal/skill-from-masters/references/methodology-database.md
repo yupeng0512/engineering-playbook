@@ -1,3 +1,9 @@
+---
+title: methodology-database
+type: note
+permalink: engineering-playbook/skills/personal/skill-from-masters/references/methodology-database
+---
+
 # Methodology Database - 领域专家方法论数据库
 
 > 收录 15+ 领域、80+ 专家的核心方法论和框架

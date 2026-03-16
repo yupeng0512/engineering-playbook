@@ -1,3 +1,9 @@
+---
+title: risk-economic-cycle-decision
+type: note
+permalink: engineering-playbook/judgment-cards/risk-economic-cycle-decision
+---
+
 ## 判断力卡片：经济周期决策——框架比预测更重要
 
 > 来源: trading-learning/sessions/2026-01-19/session-notes.md（美林投资时钟学习）

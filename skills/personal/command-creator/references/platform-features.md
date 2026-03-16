@@ -1,3 +1,9 @@
+---
+title: platform-features
+type: note
+permalink: engineering-playbook/skills/personal/command-creator/references/platform-features
+---
+
 # CodeBuddy 平台高级特性
 
 本文档详细介绍 CodeBuddy 平台提供的高级特性，帮助你创建功能强大的 Command/Skill。

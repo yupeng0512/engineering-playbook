@@ -1,3 +1,9 @@
+---
+title: idempotent-migration
+type: note
+permalink: engineering-playbook/patterns/idempotent-migration
+---
+
 # Pattern: 幂等数据库迁移
 
 > 来源项目: InfoHunter | 推荐指数: 4/5 | 适用范围: 小型项目不需要 Alembic 完整迁移链

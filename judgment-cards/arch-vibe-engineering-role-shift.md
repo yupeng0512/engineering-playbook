@@ -1,3 +1,9 @@
+---
+title: arch-vibe-engineering-role-shift
+type: note
+permalink: engineering-playbook/judgment-cards/arch-vibe-engineering-role-shift
+---
+
 ## 判断力卡片：AI 时代工程师角色转变——从实现者到验收者
 
 > 来源: 黄东旭 Vibe Engineering 2026 + Product Tri-Ownership 框架

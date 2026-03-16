@@ -1,3 +1,9 @@
+---
+title: design-principles
+type: note
+permalink: engineering-playbook/skills/personal/command-creator/references/design-principles
+---
+
 # 设计原则详解
 
 本文档详细阐述 Command/Skill 设计的核心原则，帮助你创建高效、可维护的技能。

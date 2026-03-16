@@ -1,3 +1,9 @@
+---
+title: examples
+type: note
+permalink: engineering-playbook/skills/personal/command-creator/references/examples
+---
+
 # 实战示例集合
 
 本文档提供各种场景下的完整 Command/Skill 示例，可直接复制使用或作为参考。

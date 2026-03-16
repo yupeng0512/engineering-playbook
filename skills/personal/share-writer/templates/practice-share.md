@@ -1,3 +1,9 @@
+---
+title: practice-share
+type: note
+permalink: engineering-playbook/skills/personal/share-writer/templates/practice-share
+---
+
 # 实践类分享模板
 
 用于工具使用教程、项目实践复盘、案例研究、问题排查经验等实践分享场景。

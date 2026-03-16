@@ -1,6 +1,8 @@
 ---
 name: unittest
-description: 单元测试助手（通用版）。当用户表达"运行单测"、"执行单测"、"单元测试"、"跑测试"、"测试用例"、"写单测"、"添加测试"、"TDD"、"测试驱动"、"红绿重构"等意图时触发。支持执行、编写和调试单元测试，强制遵循 TDD 红-绿-重构循环。适用于 Python（pytest/unittest）、Django、以及其他测试框架。
+description: 单元测试助手（通用版）。当用户表达"运行单测"、"执行单测"、"单元测试"、"跑测试"、"测试用例"、"写单测"、"添加测试"、"TDD"、"测试驱动"、"红绿重构"等意图时触发。支持执行、编写和调试单元测试，强制遵循
+  TDD 红-绿-重构循环。适用于 Python（pytest/unittest）、Django、以及其他测试框架。
+permalink: engineering-playbook/skills/personal/unittest/skill
 ---
 
 # 单元测试助手（通用版）

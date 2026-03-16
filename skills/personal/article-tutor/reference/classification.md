@@ -1,3 +1,9 @@
+---
+title: classification
+type: note
+permalink: engineering-playbook/skills/personal/article-tutor/reference/classification
+---
+
 # 笔记路径与分类体系
 
 ## 笔记路径规则

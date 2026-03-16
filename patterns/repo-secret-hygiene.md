@@ -1,3 +1,9 @@
+---
+title: repo-secret-hygiene
+type: note
+permalink: engineering-playbook/patterns/repo-secret-hygiene
+---
+
 # Pattern: 仓库敏感信息防护
 
 > 来源项目: engineering-playbook | 推荐指数: 5/5 | 适用范围: 任何公开或共享的代码仓库

@@ -1,3 +1,9 @@
+---
+title: data-pipeline-monitor
+type: note
+permalink: engineering-playbook/patterns/data-pipeline-monitor
+---
+
 # 数据采集→分析→推送管道模式
 
 > 来源项目: TrendRadar, github-sentinel, truthsocial-trump-monitor, infohunter

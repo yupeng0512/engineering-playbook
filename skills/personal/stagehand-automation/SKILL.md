@@ -1,6 +1,7 @@
 ---
 name: stagehand-automation
 description: Stagehand 浏览器自动化专家。当用户表达"浏览器自动化"、"AI 自动化测试"、"网页爬虫"、"数据提取"、"E2E 测试"、"Stagehand"、"自愈测试"、"自然语言操作浏览器"等意图时触发。帮助编写代码+AI混合控制的浏览器自动化脚本。
+permalink: engineering-playbook/skills/personal/stagehand-automation/skill
 ---
 
 # Stagehand 浏览器自动化专家

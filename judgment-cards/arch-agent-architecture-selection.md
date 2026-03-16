@@ -1,3 +1,9 @@
+---
+title: arch-agent-architecture-selection
+type: note
+permalink: engineering-playbook/judgment-cards/arch-agent-architecture-selection
+---
+
 ## 判断力卡片：AI Agent 架构选型与设计
 
 > 来源: ai-agent-learning/notes/agent-architecture-design.md

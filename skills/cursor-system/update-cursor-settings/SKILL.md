@@ -1,7 +1,11 @@
 ---
 name: update-cursor-settings
-description: Modify Cursor/VSCode user settings in settings.json. Use when you want to change editor settings, preferences, configuration, themes, font size, tab size, format on save, auto save, keybindings, or any settings.json values.
+description: Modify Cursor/VSCode user settings in settings.json. Use when you want
+  to change editor settings, preferences, configuration, themes, font size, tab size,
+  format on save, auto save, keybindings, or any settings.json values.
+permalink: engineering-playbook/skills/cursor-system/update-cursor-settings/skill
 ---
+
 # Updating Cursor Settings
 
 This skill guides you through modifying Cursor/VSCode user settings. Use this when you want to change editor settings, preferences, configuration, themes, keybindings, or any `settings.json` values.

@@ -1,9 +1,11 @@
 ---
-description: Slidev 演示文稿通用生成 Skill。将任意 Markdown 文档自动转换为 Slidev 格式的交互式演示文稿。适用于技术分享、产品介绍、培训课件、学术汇报、路演等各种演示场景。当用户需要"做个 PPT"、"生成幻灯片"、"做演示文稿"时，调用此 Skill。
+description: Slidev 演示文稿通用生成 Skill。将任意 Markdown 文档自动转换为 Slidev 格式的交互式演示文稿。适用于技术分享、产品介绍、培训课件、学术汇报、路演等各种演示场景。当用户需要"做个
+  PPT"、"生成幻灯片"、"做演示文稿"时，调用此 Skill。
 alwaysApply: false
 enabled: true
-updatedAt: 2026-02-25T11:25:39.800Z
-provider: 
+updatedAt: 2026-02-25 11:25:39.800000+00:00
+provider: null
+permalink: engineering-playbook/skills/personal/slidev-presentation/skill
 ---
 
 # Slidev 演示文稿通用生成 Skill（Slidev Presentation Generator）

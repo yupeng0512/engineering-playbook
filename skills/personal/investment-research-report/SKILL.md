@@ -1,3 +1,9 @@
+---
+title: SKILL
+type: note
+permalink: engineering-playbook/skills/personal/investment-research-report/skill
+---
+
 # 投研报告生成 Skill（Investment Research Report Generator）
 
 ## Description

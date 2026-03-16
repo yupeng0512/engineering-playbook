@@ -2,6 +2,7 @@
 marp: true
 theme: pitch-deck
 paginate: true
+permalink: engineering-playbook/skills/personal/md2deck/examples/qinyuanqiao-slides
 ---
 
 <!-- _class: cover -->

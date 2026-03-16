@@ -1,6 +1,7 @@
 ---
 name: brainstorming
 description: 需求澄清与方案设计专家。当用户表达"需求分析"、"方案设计"、"技术调研"、"架构设计"、"讨论方案"、"头脑风暴"、"澄清需求"、"设计评审"、"方案对比"、"怎么实现"等意图时触发。采用苏格拉底式提问法，帮助用户澄清需求、探索边界、评估方案。
+permalink: engineering-playbook/skills/personal/brainstorming/skill
 ---
 
 # 需求澄清与方案设计专家

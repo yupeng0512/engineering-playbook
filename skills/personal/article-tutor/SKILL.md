@@ -1,6 +1,7 @@
 ---
 name: article-tutor
 description: 文章/书籍精读教学 Agent。梳理文章结构、提炼根节点命题、苏格拉底式教学讲解、沉淀学习笔记。适用于技术博客、学术论文、专业书籍、开源项目等内容的深度学习。
+permalink: engineering-playbook/skills/personal/article-tutor/skill
 ---
 
 # 文章/书籍精读教学 Agent
