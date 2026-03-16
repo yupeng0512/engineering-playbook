@@ -1,0 +1,177 @@
+{
+  "version": "1.0",
+  "goal": "Minimize end-to-end cycle time for complex delivery without lowering review quality or crossing high-risk boundaries.",
+  "truth_sources": [
+    "README.md",
+    "NOW.md if present",
+    "AGENTS.md if present",
+    "relevant docs/plans",
+    ".autonomy/product_principles.md if present",
+    ".autonomy/decision_policy.md if present",
+    "relevant QA or smoke docs"
+  ],
+  "trigger_paths": {
+    "codex": "python3 scripts/aiwork/start_run.py --goal \"<task>\"",
+    "cursor": "/work-intake",
+    "skill": "engineering-playbook/skills/personal/adaptive-cell-workflow/SKILL.md"
+  },
+  "skip_when": [
+    "pure docs or wording cleanup",
+    "single-file tweak likely under 15 minutes",
+    "no autonomy boundary, state semantic, queue semantic, or multi-layer impact"
+  ],
+  "mode_policy": {
+    "solo_max": 2,
+    "split_3_max": 5,
+    "split_4_requires_memory_signal": true,
+    "high_risk_min_mode": "split-3",
+    "journey_bias_min_mode": "split-3",
+    "journey_bias_keywords": [
+      "workflow",
+      "queue",
+      "stage",
+      "state"
+    ],
+    "split_3_roles": [
+      "framing-cell",
+      "implementation-cell",
+      "risk-validation-cell"
+    ],
+    "split_4_extra_roles": [
+      "memory-pattern-cell"
+    ]
+  },
+  "layers": {
+    "frontend": [
+      "web/",
+      "frontend",
+      "ui",
+      "page",
+      "component"
+    ],
+    "backend": [
+      "api/",
+      "backend",
+      "handler",
+      "service",
+      "repository",
+      "endpoint"
+    ],
+    "ai-service": [
+      "ai-service/",
+      "ai service",
+      "analyzer",
+      "agent",
+      "prompt"
+    ]
+  },
+  "keywords": {
+    "object_chain": [
+      "workflow",
+      "state",
+      "stage",
+      "queue",
+      "lifecycle"
+    ],
+    "high_risk": {
+      "send": "real external side-effect boundary",
+      "oauth": "oauth boundary",
+      "webhook": "webhook boundary",
+      "billing": "billing boundary",
+      "quota": "quota boundary",
+      "schema": "schema or migration boundary",
+      "migration": "schema or migration boundary",
+      "permission": "permission boundary",
+      "production": "production boundary",
+      "public api": "public api semantic boundary"
+    },
+    "ambiguity": [
+      "?",
+      "whether",
+      "maybe",
+      "might",
+      "option",
+      "tradeoff",
+      "方案",
+      "是否",
+      "可能",
+      "对比"
+    ],
+    "complexity": [
+      "workflow",
+      "end-to-end",
+      "e2e",
+      "pipeline",
+      "state",
+      "lifecycle",
+      "queue",
+      "stage",
+      "refactor",
+      "milestone"
+    ],
+    "memory_signal": [
+      "pattern",
+      "playbook",
+      "reuse",
+      "precedent",
+      "history",
+      "historical",
+      "retro",
+      "经验",
+      "复用",
+      "模式",
+      "沉淀"
+    ],
+    "shared_interface": [
+      "public api",
+      "shared type",
+      "tool",
+      "endpoint"
+    ],
+    "medium_risk": [
+      "api",
+      "endpoint",
+      "queue",
+      "stage"
+    ]
+  },
+  "scoring_policy": {
+    "complexity": {
+      "medium_if_goal_words_at_least": 10,
+      "medium_if_paths_at_least": 2,
+      "medium_if_object_hits_at_least": 1,
+      "high_if_object_hits_at_least": 3,
+      "high_if_layers_at_least": 2
+    },
+    "coupling": {
+      "medium_if_layers_at_least": 2,
+      "high_if_layers_at_least": 3
+    },
+    "ambiguity": {
+      "medium_if_goal_words_at_most": 8,
+      "medium_if_no_paths": true
+    }
+  },
+  "scoring_hints": {
+    "complexity": {
+      "0": "single file or obvious local fix",
+      "1": "one layer, several files, or limited workflow branching",
+      "2": "multi-step workflow, lifecycle change, or non-trivial validation path"
+    },
+    "coupling": {
+      "0": "one layer only",
+      "1": "two layers or one shared interface",
+      "2": "three layers or shared workflow semantics across the repo"
+    },
+    "risk": {
+      "0": "docs, tests, low-risk refactor",
+      "1": "repo-internal behavior change without a high-risk boundary",
+      "2": "send, oauth, webhook, billing, schema, permissions, production, or other policy-defined boundary"
+    },
+    "ambiguity": {
+      "0": "acceptance criteria already explicit in repo truth",
+      "1": "minor gaps but a likely path exists",
+      "2": "multiple plausible behaviors or missing approval rule"
+    }
+  }
+}

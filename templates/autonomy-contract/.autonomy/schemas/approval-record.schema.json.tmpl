@@ -1,0 +1,53 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "ApprovalRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task_id",
+    "state",
+    "requested_at",
+    "decision_at",
+    "decision_by",
+    "checkpoint_path",
+    "risk_summary",
+    "timeout_at"
+  ],
+  "properties": {
+    "task_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "requested",
+        "approved",
+        "rejected",
+        "expired"
+      ]
+    },
+    "requested_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "decision_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "decision_by": {
+      "type": ["string", "null"]
+    },
+    "checkpoint_path": {
+      "type": ["string", "null"]
+    },
+    "risk_summary": {
+      "type": "string"
+    },
+    "timeout_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    }
+  }
+}

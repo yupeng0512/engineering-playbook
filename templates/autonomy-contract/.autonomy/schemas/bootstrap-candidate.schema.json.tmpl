@@ -1,0 +1,89 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "BootstrapCandidate",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "repo",
+    "status",
+    "target_files",
+    "change_summary",
+    "evidence_refs",
+    "evals",
+    "promotion_required",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "drafted",
+        "evaluating",
+        "ready_for_review",
+        "accepted",
+        "discarded",
+        "rolled_back"
+      ]
+    },
+    "target_files": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "pattern": "^\\.autonomy/"
+      },
+      "minItems": 1
+    },
+    "change_summary": {
+      "type": "string",
+      "minLength": 1
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "evals": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["name", "status", "notes"],
+        "properties": {
+          "name": {
+            "type": "string",
+            "enum": [
+              "boundary_compliance",
+              "history_replay",
+              "failure_regression"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": ["passed", "failed"]
+          },
+          "notes": {
+            "type": "string"
+          }
+        }
+      },
+      "minItems": 3
+    },
+    "promotion_required": {
+      "type": "boolean"
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

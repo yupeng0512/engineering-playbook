@@ -1,0 +1,33 @@
+---
+description: Score a task across complexity, coupling, risk, and ambiguity; choose Solo, Split-3, or Split-4; and prepare the initial `.ai-work` run board.
+---
+
+# /work-intake
+
+## Input
+
+- `$ARGUMENTS`: task description or task link
+
+## Tasks
+
+1. Read `.ai-work/intake-policy.json` first. Treat it as the single source of truth for:
+   - repo truth read order
+   - scoring dimensions and hints
+   - mode thresholds
+   - high-risk floors
+   - memory-cell activation rules
+2. Read the repo truth named by the policy.
+3. If you are running inside Codex and `scripts/aiwork/start_run.py` exists, use it as the actual trigger path:
+   - `python3 scripts/aiwork/start_run.py --goal "<task>"`
+4. Otherwise, apply the policy manually:
+   - score `complexity`, `coupling`, `risk`, `ambiguity`
+   - apply the mode thresholds and floors from the policy
+   - create or update `.ai-work/runs/<run-id>/board.json`
+5. Record the main user journey touched, likely modules, and whether approval is required.
+
+## Output
+
+- A short intake summary
+- The four scores with reasons
+- Chosen mode
+- Whether the task should proceed or block

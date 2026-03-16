@@ -1,0 +1,27 @@
+---
+description: Generate DispatchBriefs for the required cells and initialize the briefs/returns skeleton for the selected Adaptive Cell Workflow mode.
+---
+
+# /role-split
+
+## Input
+
+- `$ARGUMENTS`: run id or task summary
+
+## Tasks
+
+1. Read `.ai-work/runs/<run-id>/board.json`.
+2. If the mode is `solo`, state that no split is needed and stop.
+3. If the mode is `split-3` or `split-4`, generate one dispatch brief per required cell:
+   - `framing-cell`
+   - `implementation-cell`
+   - `risk-validation-cell`
+   - `memory-pattern-cell` only for `split-4`
+4. Store the generated briefs under `.ai-work/runs/<run-id>/briefs/`.
+5. Keep every brief aligned with the `DispatchBrief` contract.
+
+## Output
+
+- The list of active cells
+- One short dispatch summary per cell
+- Any immediate escalation notes

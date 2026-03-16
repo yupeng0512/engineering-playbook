@@ -1,0 +1,47 @@
+# Default Action Policy
+
+## `blocked_on_decision`
+
+允许：
+
+- 补测试
+- 补文档
+- 补低风险调研
+- 切换到无依赖 sibling task
+
+禁止：
+
+- 擅自选择高影响方案
+- 越过审批继续实现
+
+## `blocked_on_external`
+
+允许：
+
+- 指数退避重试
+- 切换到其他不依赖外部结果的任务
+- 记录缺失证据和等待原因
+
+禁止：
+
+- 伪造外部结果
+- 把“外部未返回”当作“外部成功”
+
+## `ready_for_review`
+
+允许：
+
+- 整理证据包
+- 生成 review 摘要
+- 生成审批 checkpoint
+
+禁止：
+
+- 继续扩张改动范围
+- 在无审批下继续新的实现
+
+## Approval Timeout
+
+- 15 分钟：提醒一次
+- 30 分钟：只允许做低风险 backlog
+- 超时期间不得跨越产品/API/schema/依赖边界

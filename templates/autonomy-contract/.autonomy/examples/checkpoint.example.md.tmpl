@@ -1,0 +1,46 @@
+# Approval Checkpoint
+
+## 1. 当前目标
+
+- 任务：初始化仓库级自治契约并提交首版模板
+- 当前阶段：`ready_for_review`
+
+## 2. 已完成内容
+
+- 已创建 `.autonomy/` 目录和核心模板
+- 已补充状态机、schema 和样例
+- 已跑过基础验证脚本
+
+## 3. 证据
+
+- diff / commit: local working tree
+- test / lint / build: `validate_autonomy_contract.py {{REPO_NAME}}`
+- screenshot / report / link: `.autonomy/examples/*.json`
+
+## 4. 未决问题
+
+- 本仓库是否需要额外的高风险审批项
+
+## 5. 候选方案 A / B
+
+### A
+
+- 直接采用默认模板，后续再按项目实际边界补充
+
+### B
+
+- 先补充更完整的 repo-specific product principles，再启用 runtime
+
+## 6. 推荐方案及理由
+
+- 推荐：B
+- 理由：边界文件越具体，自治越不容易偏航
+
+## 7. 风险
+
+- 若边界文件长期不维护，runtime 可能形式合规但语义失真
+
+## 8. 超时默认动作
+
+- 15 分钟无回应：提醒一次，并整理 repo-specific TODO 列表
+- 30 分钟无回应：只继续补文档和低风险调研，不启用高风险自治

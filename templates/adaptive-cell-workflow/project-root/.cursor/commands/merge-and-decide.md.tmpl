@@ -1,0 +1,27 @@
+---
+description: Merge cell returns into a single execution path, reject dead-end options, and produce the commander decision for final implementation.
+---
+
+# /merge-and-decide
+
+## Input
+
+- `$ARGUMENTS`: run id
+
+## Tasks
+
+1. Read all returns under `.ai-work/runs/<run-id>/returns/`.
+2. Compare cell recommendations against repo truth and `.autonomy/` if present.
+3. Produce one `MergeDecision` containing:
+   - `chosen_path`
+   - `rejected_paths`
+   - `required_checks`
+   - `promotion_targets`
+4. If risk and implementation recommendations conflict, prefer the safer path and explain why.
+5. If the task is under-specified or crosses an unresolved high-risk boundary, return `blocked`.
+
+## Output
+
+- One chosen execution path
+- Rejected alternatives with reasons
+- Validation and promotion checklist

@@ -1,0 +1,27 @@
+---
+description: Check whether spec, code, constants, enums, and project status docs have drifted apart, then report or reconcile the gaps.
+---
+
+# /doc-code-sync
+
+## Input
+
+- `$ARGUMENTS`: feature, module, or change summary
+
+## Tasks
+
+1. Compare code changes against repo truth and any spec anchors.
+2. Check for drift in:
+   - README / CONTEXT / NOW
+   - public API docs
+   - constants / enums / labels
+   - `.autonomy/` if boundary semantics changed
+3. Report gaps in order of impact.
+4. If the gaps are straightforward and already approved, sync them.
+5. If the gaps imply a direction change, stop and escalate.
+
+## Output
+
+- Drift findings
+- Recommended sync actions
+- Whether the change can be safely reconciled now or should block

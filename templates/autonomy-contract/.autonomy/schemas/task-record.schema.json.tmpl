@@ -1,0 +1,109 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "TaskRecord",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "id",
+    "goal",
+    "repo",
+    "state",
+    "approval_state",
+    "risk_level",
+    "priority",
+    "depends_on",
+    "blocked_reason",
+    "next_check_at",
+    "default_action_policy",
+    "evidence_refs",
+    "allowed_paths",
+    "updated_at"
+  ],
+  "properties": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "goal": {
+      "type": "string",
+      "minLength": 1
+    },
+    "repo": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "type": "string",
+      "enum": [
+        "queued",
+        "planning",
+        "researching",
+        "executing",
+        "blocked_on_decision",
+        "blocked_on_external",
+        "deferred",
+        "ready_for_review",
+        "completed",
+        "failed"
+      ]
+    },
+    "approval_state": {
+      "type": "string",
+      "enum": [
+        "not_required",
+        "requested",
+        "approved",
+        "rejected",
+        "expired"
+      ]
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["P0", "P1", "P2", "P3"]
+    },
+    "depends_on": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "blocked_reason": {
+      "type": ["string", "null"]
+    },
+    "next_check_at": {
+      "type": ["string", "null"],
+      "format": "date-time"
+    },
+    "default_action_policy": {
+      "type": "string",
+      "enum": [
+        "continue_low_risk_backlog",
+        "pause_and_wait",
+        "retry_with_backoff",
+        "generate_evidence_only",
+        "switch_to_sibling_task"
+      ]
+    },
+    "evidence_refs": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "allowed_paths": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time"
+    }
+  }
+}

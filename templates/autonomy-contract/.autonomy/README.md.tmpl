@@ -1,0 +1,32 @@
+# {{REPO_NAME}} Autonomy Contract
+
+本目录定义仓库级自治边界。任何自治 runtime、Skill 或审批适配器都应先读这里，再开始推进任务。
+
+## 文件说明
+
+- `product_principles.md`: 产品方向边界
+- `decision_policy.md`: 自动决策 vs 必须审批
+- `definition_of_done.md`: 完成标准与证据要求
+- `default_action_policy.md`: 阻塞态、评审态、超时态默认动作
+- `bootstrap_policy.md`: 配置级自举边界和晋升规则
+- `checkpoint_template.md`: 人工审批固定模板
+- `model_policy.json`: planner / reviewer / executor 槽位
+- `state_machine.json`: 三套状态机与时间规则
+- `schemas/`: 机器可校验的记录契约
+- `examples/`: 合法样例
+
+## 启动顺序
+
+1. 先读取 `product_principles.md`
+2. 再读取 `decision_policy.md`
+3. 再读取 `definition_of_done.md`
+4. 按 `state_machine.json` 推进任务
+5. 需要审批时使用 `checkpoint_template.md`
+6. 复盘和自举时遵守 `bootstrap_policy.md`
+
+## 不可违反的规则
+
+- 没有审批通过，不能跨越高风险边界
+- `ready_for_review` 只能整理证据，不能继续扩张改动
+- 配置级自举只能修改 `.autonomy/` 白名单文件
+- 任何 checkpoint 都必须包含完整 8 段 payload

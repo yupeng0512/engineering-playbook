@@ -1,0 +1,59 @@
+# {{REPO_NAME}} Adaptive Cell Workflow
+
+本目录是复杂任务协作的临时区，用来承载：
+
+- task intake 结果
+- cell briefs
+- cell returns
+- merge decision
+- promotion routing
+
+它的目的不是保存所有草稿，而是让复杂任务的中间产物可追踪、可汇总、可晋升。
+
+## Intake Policy
+
+- `.ai-work/intake-policy.json` 是 intake 规则的单一来源
+- `AGENTS.md`、`scripts/aiwork/start_run.py`、`.cursor/commands/work-intake.md`、repo-local Skill 或 playbook 说明都应该引用它，而不是各自复制一套阈值和边界
+- 对 Codex，优先使用 `python3 scripts/aiwork/start_run.py --goal "<task>"` 触发 intake
+- 对 Cursor，`/work-intake` 应按这份 policy 执行
+
+## Modes
+
+- `Solo Mode`: 单模块、小改动、低风险任务
+- `Split-3 Mode`: 默认复杂研发交付模式，启用 `framing-cell`、`implementation-cell`、`risk-validation-cell`
+- `Split-4 Mode`: 在 `Split-3` 基础上增加 `memory-pattern-cell`
+
+## Run Layout
+
+```text
+.ai-work/
+  README.md
+  templates/
+    board.json
+    dispatch-brief.md
+    worker-return.md
+    merge.md
+    promotion.md
+  runs/
+    <run-id>/
+      board.json
+      briefs/
+      returns/
+      merge.md
+      promotion.md
+```
+
+## Working Rules
+
+- `board.json` 是 run 的最小状态面板
+- `intake-policy.json` 是 mode 选择和高风险 floor 的单一来源
+- briefs 和 returns 只服务本次任务，不自动晋升为正式知识
+- Commander 负责把最终结论写回正式区
+- 如果仓库存在 `.autonomy/`，高风险任务必须让 `risk-validation-cell` 读取它
+
+## Promotion Rules
+
+- repo truth：README / CONTEXT / NOW / active plan / `.autonomy/`
+- playbook：跨项目可复用的 pattern / command / subagent 模板
+- second-brain：session、决策、经验、长期记忆
+- 不能把未筛选草稿直接写进正式知识区

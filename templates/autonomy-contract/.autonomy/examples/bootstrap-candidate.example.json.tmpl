@@ -1,0 +1,33 @@
+{
+  "id": "bootstrap_candidate_20260313_state_machine_tuning",
+  "repo": "{{REPO_NAME}}",
+  "status": "ready_for_review",
+  "target_files": [
+    ".autonomy/default_action_policy.md",
+    ".autonomy/state_machine.json"
+  ],
+  "change_summary": "Tune approval reminders and tighten the ready_for_review freeze rule",
+  "evidence_refs": [
+    "runs/2026-03-13/reflect-summary.md",
+    "runs/2026-03-13/evals/history-replay.md"
+  ],
+  "evals": [
+    {
+      "name": "boundary_compliance",
+      "status": "passed",
+      "notes": "Only .autonomy files were touched"
+    },
+    {
+      "name": "history_replay",
+      "status": "passed",
+      "notes": "Three prior blocked_on_decision runs behaved as expected"
+    },
+    {
+      "name": "failure_regression",
+      "status": "passed",
+      "notes": "No recurrence of approval timeout bypass"
+    }
+  ],
+  "promotion_required": true,
+  "updated_at": "2026-03-13T19:00:00Z"
+}

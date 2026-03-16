@@ -1,0 +1,50 @@
+# Bootstrap Policy
+
+## Scope
+
+V1 只允许 **配置级自举**，目标是让自治系统优化自己的边界、提示、工具契约和评估规则。
+
+## Allowed Files
+
+- `.autonomy/decision_policy.md`
+- `.autonomy/default_action_policy.md`
+- `.autonomy/checkpoint_template.md`
+- `.autonomy/model_policy.json`
+- `.autonomy/state_machine.json`
+- `.autonomy/schemas/`
+- `.autonomy/examples/`
+
+## Forbidden Files
+
+- 任何产品代码
+- 任何数据库 schema / migration
+- 任何基础设施配置
+- 任何密钥、凭据、生产环境配置
+
+## Fixed Loop
+
+1. `reflect run history`
+2. `draft candidate`
+3. `run evals`
+4. `generate checkpoint`
+5. `human promotion`
+
+## Eval Gates
+
+每个 candidate 至少通过：
+
+1. 边界合规
+2. 历史回放
+3. 失败样例回归
+
+未通过时：
+
+- 可修正后重新评估
+- 或直接 `discarded`
+
+## Promotion Rule
+
+- 不自动覆盖 active config
+- 必须先进入 `ready_for_review`
+- 人工确认后才可 `accepted`
+- 被确认回退时进入 `rolled_back`

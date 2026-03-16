@@ -1,0 +1,73 @@
+{
+  "task_record": {
+    "states": [
+      "queued",
+      "planning",
+      "researching",
+      "executing",
+      "blocked_on_decision",
+      "blocked_on_external",
+      "deferred",
+      "ready_for_review",
+      "completed",
+      "failed"
+    ],
+    "transitions": {
+      "queued": ["planning"],
+      "planning": ["researching", "executing", "blocked_on_decision", "failed"],
+      "researching": ["executing", "blocked_on_decision", "blocked_on_external", "deferred", "failed"],
+      "executing": ["blocked_on_decision", "blocked_on_external", "deferred", "ready_for_review", "failed"],
+      "blocked_on_decision": ["researching", "executing", "deferred", "failed"],
+      "blocked_on_external": ["researching", "executing", "deferred", "failed"],
+      "deferred": ["planning", "researching", "executing", "failed"],
+      "ready_for_review": ["completed", "failed"],
+      "completed": [],
+      "failed": []
+    },
+    "default_action_by_state": {
+      "blocked_on_decision": "switch_to_sibling_task",
+      "blocked_on_external": "retry_with_backoff",
+      "ready_for_review": "generate_evidence_only"
+    }
+  },
+  "approval_record": {
+    "states": [
+      "not_required",
+      "requested",
+      "approved",
+      "rejected",
+      "expired"
+    ],
+    "transitions": {
+      "not_required": ["requested", "approved"],
+      "requested": ["approved", "rejected", "expired"],
+      "approved": [],
+      "rejected": [],
+      "expired": []
+    }
+  },
+  "bootstrap_candidate": {
+    "states": [
+      "drafted",
+      "evaluating",
+      "ready_for_review",
+      "accepted",
+      "discarded",
+      "rolled_back"
+    ],
+    "transitions": {
+      "drafted": ["evaluating", "discarded"],
+      "evaluating": ["ready_for_review", "discarded"],
+      "ready_for_review": ["accepted", "discarded", "rolled_back"],
+      "accepted": ["rolled_back"],
+      "discarded": [],
+      "rolled_back": []
+    }
+  },
+  "timers": {
+    "approval_reminder_minutes": 15,
+    "approval_timeout_minutes": 30,
+    "checkpoint_interval_minutes": 60,
+    "external_retry_backoff_minutes": [5, 15, 30]
+  }
+}

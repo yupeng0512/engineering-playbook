@@ -1,0 +1,25 @@
+{
+  "repo": "{{REPO_NAME}}",
+  "slots": {
+    "planner": {
+      "default_model": "gpt-5.4",
+      "override_env": "AUTONOMY_PLANNER_MODEL",
+      "responsibility": "planning, stage review, branch selection"
+    },
+    "reviewer": {
+      "default_model": "gpt-5.4",
+      "override_env": "AUTONOMY_REVIEWER_MODEL",
+      "responsibility": "checkpoint review, risk review, bootstrap candidate review"
+    },
+    "executor": {
+      "default_model": "coding-model-slot",
+      "override_env": "AUTONOMY_EXECUTOR_MODEL",
+      "responsibility": "implementation, testing, documentation, low-risk research"
+    }
+  },
+  "execution": {
+    "background_required_for_long_runs": true,
+    "webhook_required": true,
+    "approval_required_for_high_risk_tools": true
+  }
+}

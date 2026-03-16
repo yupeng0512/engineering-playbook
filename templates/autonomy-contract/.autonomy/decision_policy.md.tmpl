@@ -1,0 +1,36 @@
+# Decision Policy
+
+## AI Can Decide Without Approval
+
+- 已明确范围内的低风险实现细节
+- 补测试、补文档、补低风险调研
+- 在 `allowed_paths` 内做小步实现和重构
+- 生成证据包、复盘摘要、候选自举配置
+
+## Approval Required
+
+- 产品逻辑、用户流程、信息架构变化
+- 公共 API 语义变化
+- 数据库 schema、migration、权限模型
+- 新依赖引入或基础设施改动
+- 生产环境、支付、第三方后台、真实用户数据
+- 任何无法由现有规范唯一确定的方向性分叉
+
+## Always Forbidden Without Explicit Human Authorization
+
+- 写入密钥、覆盖凭据、暴露敏感信息
+- 对生产环境执行破坏性操作
+- 跳过测试或证据要求直接宣告完成
+- 用默认动作代替真正的审批
+
+## Risk Mapping
+
+- `low`: 文档、测试、局部重构、低风险调研
+- `medium`: 仓库内实现改动，但不触达公共边界
+- `high`: 产品方向、公共 API、schema、权限、基础设施、外部系统
+
+## Approval SLA
+
+- 15 分钟未回应：发送 reminder
+- 30 分钟未回应：进入保守默认动作
+- 超时后不得跨越高风险边界

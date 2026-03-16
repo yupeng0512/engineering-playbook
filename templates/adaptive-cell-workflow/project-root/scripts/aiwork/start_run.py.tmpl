@@ -1,0 +1,466 @@
+#!/usr/bin/env python3
+from __future__ import annotations
+
+import argparse
+import json
+import re
+import sys
+from datetime import datetime
+from pathlib import Path
+from typing import Any
+
+
+ROLE_TEMPLATES = {
+    "framing-cell": {
+        "scope_in": "Goal clarity, acceptance criteria, spec anchors, state or queue semantics, and product boundaries.",
+        "scope_out": "Direct code edits, schema changes, deployment actions.",
+        "deliverable": "A framing return that states the target workflow, non-goals, acceptance criteria, and escalation points.",
+        "constraints": "Read repo truth before proposing direction. Do not invent product semantics that are not grounded in repo truth or .autonomy.",
+        "escalate": "The goal changes state semantics, lifecycle, queue reasons, or approval behavior without a clear spec anchor.",
+    },
+    "implementation-cell": {
+        "scope_in": "Affected files, modules, APIs, validation path, and the smallest safe execution order across layers.",
+        "scope_out": "Final merge authority, direct formal-file edits, approval decisions.",
+        "deliverable": "An implementation return with the minimum viable change set, likely file paths, ordering, and validation commands.",
+        "constraints": "Preserve existing layering. Avoid collapsing distinct workflow concerns together just to save time.",
+        "escalate": "The smallest safe path still requires shared interface, public API, schema, or architecture redesign.",
+    },
+    "risk-validation-cell": {
+        "scope_in": "Approval gates, high-risk boundaries, regression surface, rollback expectations, and rebuild/recreate needs.",
+        "scope_out": "Human approval, speculative product decisions, direct production changes.",
+        "deliverable": "A risk return that classifies the task, names blocked edges, and states required checks before implementation or release.",
+        "constraints": "Read .autonomy before making a risk call. Prefer blocked over guessed for send, oauth, billing, schema, permissions, or state semantics.",
+        "escalate": "The task touches a policy-defined high-risk boundary or unresolved workflow semantics.",
+    },
+    "memory-pattern-cell": {
+        "scope_in": "Relevant precedents from engineering-playbook, second-brain, and project docs when reuse meaningfully reduces task cost.",
+        "scope_out": "Broad research for its own sake, automatic promotion of raw drafts.",
+        "deliverable": "A short precedent note and promotion recommendation that is specific enough to help the commander decide faster.",
+        "constraints": "Only join split-4 runs. Keep reuse evidence short, relevant, and decision-oriented.",
+        "escalate": "Reuse research would cost more than it saves, or no trustworthy precedent exists.",
+    },
+}
+
+MODE_RANK = {"solo": 0, "split-3": 1, "split-4": 2}
+
+
+def parse_args() -> argparse.Namespace:
+    parser = argparse.ArgumentParser(
+        description="Start an Adaptive Cell Workflow run."
+    )
+    parser.add_argument("--goal", required=True, help="Task goal or user request")
+    parser.add_argument(
+        "--path",
+        dest="paths",
+        action="append",
+        default=[],
+        help="Relevant repo path. Repeat for multiple paths.",
+    )
+    parser.add_argument(
+        "--mode",
+        choices=("auto", "solo", "split-3", "split-4"),
+        default="auto",
+        help="Force a mode or let the policy score it automatically.",
+    )
+    parser.add_argument(
+        "--run-id",
+        help="Optional explicit run id. Default: YYYYMMDD-goal-slug",
+    )
+    parser.add_argument(
+        "--no-briefs",
+        action="store_true",
+        help="Create only the board and merge/promotion skeletons.",
+    )
+    parser.add_argument(
+        "--dry-run",
+        action="store_true",
+        help="Print the computed board without writing files.",
+    )
+    return parser.parse_args()
+
+
+def ensure_repo_root(script_path: Path) -> Path:
+    repo_root = script_path.resolve().parents[2]
+    if not (repo_root / ".ai-work" / "intake-policy.json").exists():
+        raise SystemExit("Could not locate repo root with .ai-work/intake-policy.json")
+    return repo_root
+
+
+def load_json(path: Path) -> Any:
+    return json.loads(path.read_text(encoding="utf-8"))
+
+
+def require_key(payload: dict[str, Any], key: str, expected_type: type, errors: list[str]) -> None:
+    value = payload.get(key)
+    if not isinstance(value, expected_type):
+        errors.append(f"policy key '{key}' must be {expected_type.__name__}")
+
+
+def load_policy(repo_root: Path) -> dict[str, Any]:
+    policy_path = repo_root / ".ai-work" / "intake-policy.json"
+    try:
+        policy = load_json(policy_path)
+    except json.JSONDecodeError as exc:
+        raise SystemExit(f"Invalid JSON in {policy_path}: {exc}") from exc
+
+    errors: list[str] = []
+    for key in ("version", "goal"):
+        if not isinstance(policy.get(key), str) or not policy[key].strip():
+            errors.append(f"policy key '{key}' must be a non-empty string")
+    require_key(policy, "truth_sources", list, errors)
+    require_key(policy, "mode_policy", dict, errors)
+    require_key(policy, "layers", dict, errors)
+    require_key(policy, "keywords", dict, errors)
+    require_key(policy, "scoring_policy", dict, errors)
+    require_key(policy, "scoring_hints", dict, errors)
+    mode_policy = policy.get("mode_policy", {})
+    for key in ("solo_max", "split_3_max"):
+        if not isinstance(mode_policy.get(key), int):
+            errors.append(f"mode_policy.{key} must be an integer")
+    if not isinstance(mode_policy.get("split_4_requires_memory_signal"), bool):
+        errors.append("mode_policy.split_4_requires_memory_signal must be a boolean")
+    if mode_policy.get("high_risk_min_mode") not in MODE_RANK:
+        errors.append("mode_policy.high_risk_min_mode must be solo/split-3/split-4")
+    if mode_policy.get("journey_bias_min_mode") not in MODE_RANK:
+        errors.append("mode_policy.journey_bias_min_mode must be solo/split-3/split-4")
+    if not isinstance(mode_policy.get("split_3_roles"), list) or not mode_policy.get("split_3_roles"):
+        errors.append("mode_policy.split_3_roles must be a non-empty list")
+    if not isinstance(mode_policy.get("split_4_extra_roles"), list):
+        errors.append("mode_policy.split_4_extra_roles must be a list")
+    keywords = policy.get("keywords", {})
+    if not isinstance(keywords.get("high_risk"), dict):
+        errors.append("keywords.high_risk must be an object")
+    for key in ("object_chain", "ambiguity", "complexity", "memory_signal", "shared_interface", "medium_risk"):
+        if not isinstance(keywords.get(key), list):
+            errors.append(f"keywords.{key} must be a list")
+
+    if errors:
+        joined = "\n".join(f"- {error}" for error in errors)
+        raise SystemExit(f"Invalid intake policy:\n{joined}")
+    return policy
+
+
+def slugify(text: str) -> str:
+    slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    return slug[:48] or "task"
+
+
+def normalize(text: str) -> str:
+    return re.sub(r"\s+", " ", text.lower()).strip()
+
+
+def contains_any(text: str, keywords: list[str]) -> bool:
+    return any(keyword in text for keyword in keywords)
+
+
+def detect_layers(goal_text: str, paths: list[str], layers_policy: dict[str, list[str]]) -> list[str]:
+    detected: list[str] = []
+    haystacks = [goal_text, *[path.lower() for path in paths]]
+    for layer, hints in layers_policy.items():
+        if any(hint in haystack for haystack in haystacks for hint in hints):
+            detected.append(layer)
+    return detected
+
+
+def detect_keyword_map(goal_text: str, paths: list[str], keyword_map: dict[str, str]) -> list[str]:
+    flags: list[str] = []
+    haystack = " ".join([goal_text, *[path.lower() for path in paths]])
+    for keyword, label in keyword_map.items():
+        if keyword in haystack and label not in flags:
+            flags.append(label)
+    return flags
+
+
+def score_complexity(
+    goal_text: str,
+    layers: list[str],
+    paths: list[str],
+    policy: dict[str, Any],
+) -> tuple[int, str]:
+    config = policy["scoring_policy"]["complexity"]
+    object_hits = sum(1 for keyword in policy["keywords"]["object_chain"] if keyword in goal_text)
+    reasons: list[str] = []
+    score = 0
+    if (
+        object_hits >= config["medium_if_object_hits_at_least"]
+        or len(paths) >= config["medium_if_paths_at_least"]
+        or len(goal_text.split()) >= config["medium_if_goal_words_at_least"]
+    ):
+        score = 1
+        reasons.append("multi-step workflow or non-trivial change surface")
+    if (
+        object_hits >= config["high_if_object_hits_at_least"]
+        or len(layers) >= config["high_if_layers_at_least"]
+        or contains_any(goal_text, policy["keywords"]["complexity"])
+    ):
+        score = 2
+        reasons.append("cross-layer or lifecycle-heavy behavior")
+    if not reasons:
+        reasons.append("small local change surface")
+    return score, "; ".join(reasons)
+
+
+def score_coupling(goal_text: str, layers: list[str], policy: dict[str, Any]) -> tuple[int, str]:
+    config = policy["scoring_policy"]["coupling"]
+    if len(layers) >= config["high_if_layers_at_least"]:
+        return 2, "touches three layers or equivalent shared workflow semantics"
+    if len(layers) >= config["medium_if_layers_at_least"]:
+        return 1, "touches two layers or one shared interface"
+    if contains_any(goal_text, policy["keywords"]["shared_interface"]):
+        return 1, "likely shared interface impact"
+    return 0, "single-layer local change"
+
+
+def score_risk(goal_text: str, high_risk_flags: list[str], layers: list[str], policy: dict[str, Any]) -> tuple[int, str]:
+    if high_risk_flags:
+        return 2, "; ".join(high_risk_flags)
+    if len(layers) >= 2 or contains_any(goal_text, policy["keywords"]["medium_risk"]):
+        return 1, "repo-internal behavior change with cross-surface impact"
+    return 0, "docs/tests/local refactor path"
+
+
+def score_ambiguity(goal_text: str, paths: list[str], high_risk_flags: list[str], policy: dict[str, Any]) -> tuple[int, str]:
+    config = policy["scoring_policy"]["ambiguity"]
+    if contains_any(goal_text, policy["keywords"]["ambiguity"]):
+        return 2, "multiple plausible directions or explicit uncertainty markers"
+    if config["medium_if_no_paths"] and not paths and len(goal_text.split()) <= config["medium_if_goal_words_at_most"] and not high_risk_flags:
+        return 1, "brief request with limited implementation detail"
+    return 0, "goal is concrete enough to proceed"
+
+
+def max_mode(left: str, right: str) -> str:
+    return left if MODE_RANK[left] >= MODE_RANK[right] else right
+
+
+def choose_mode(
+    forced_mode: str,
+    total: int,
+    high_risk_flags: list[str],
+    memory_signal: bool,
+    journey_bias: bool,
+    policy: dict[str, Any],
+) -> tuple[str, str]:
+    mode_policy = policy["mode_policy"]
+    reasons: list[str] = []
+    if forced_mode != "auto":
+        return forced_mode, "mode forced by CLI"
+
+    if total <= mode_policy["solo_max"]:
+        mode = "solo"
+        reasons.append(f"score 0-{mode_policy['solo_max']}")
+    elif total <= mode_policy["split_3_max"]:
+        mode = "split-3"
+        reasons.append(f"score {mode_policy['solo_max'] + 1}-{mode_policy['split_3_max']}")
+    elif mode_policy["split_4_requires_memory_signal"] and not memory_signal:
+        mode = "split-3"
+        reasons.append("score above split-3 threshold but no explicit reuse signal")
+    else:
+        mode = "split-4"
+        reasons.append("score above split-3 threshold with explicit reuse signal")
+
+    if high_risk_flags:
+        mode = max_mode(mode, mode_policy["high_risk_min_mode"])
+        reasons.append(f"high-risk floor -> {mode_policy['high_risk_min_mode']}")
+    if journey_bias:
+        mode = max_mode(mode, mode_policy["journey_bias_min_mode"])
+        reasons.append(f"journey bias floor -> {mode_policy['journey_bias_min_mode']}")
+    return mode, "; ".join(reasons)
+
+
+def build_workers(mode: str, policy: dict[str, Any]) -> list[dict[str, str]]:
+    workers = [{"role": "commander", "status": "active"}]
+    split_3_roles = policy["mode_policy"]["split_3_roles"]
+    split_4_extra_roles = policy["mode_policy"]["split_4_extra_roles"]
+    if mode in {"split-3", "split-4"}:
+        for role in split_3_roles:
+            workers.append({"role": role, "status": "queued"})
+    if mode == "split-4":
+        for role in split_4_extra_roles:
+            workers.append({"role": role, "status": "queued"})
+    return workers
+
+
+def render_dispatch_brief(
+    role: str,
+    goal: str,
+    layers: list[str],
+    paths: list[str],
+    high_risk_flags: list[str],
+    policy: dict[str, Any],
+) -> str:
+    role_meta = ROLE_TEMPLATES.get(role)
+    if role_meta is None:
+        role_meta = {
+            "scope_in": "Role-specific analysis for the current task.",
+            "scope_out": "Formal-file edits and final merge authority.",
+            "deliverable": "A task-focused return that helps the commander decide faster.",
+            "constraints": "Stay inside the role brief and repo truth.",
+            "escalate": "Required context is missing or the role would need to guess product direction.",
+        }
+    inputs = list(policy["truth_sources"])
+    if paths:
+        inputs.extend(paths)
+    if high_risk_flags:
+        inputs.append("Relevant .autonomy files for the named high-risk boundary")
+
+    lines = [
+        "# Dispatch Brief",
+        "",
+        "## Goal",
+        f"- {goal}",
+        "",
+        "## Role",
+        f"- {role}",
+        "",
+        "## Scope",
+        f"- In: {role_meta['scope_in']}",
+        f"- Out: {role_meta['scope_out']}",
+        "",
+        "## Inputs",
+    ]
+    lines.extend(f"- {item}" for item in inputs)
+    lines.extend(
+        [
+            "",
+            "## Deliverable",
+            f"- {role_meta['deliverable']}",
+            "",
+            "## Constraints",
+            f"- Layers in play: {', '.join(layers) if layers else 'not specified'}",
+            f"- {role_meta['constraints']}",
+        ]
+    )
+    if high_risk_flags:
+        lines.append(f"- High-risk flags: {', '.join(high_risk_flags)}")
+    lines.extend(
+        [
+            "",
+            "## Escalate When",
+            f"- {role_meta['escalate']}",
+            "",
+        ]
+    )
+    return "\n".join(lines)
+
+
+def load_template(repo_root: Path, relative_path: str) -> str:
+    return (repo_root / relative_path).read_text(encoding="utf-8")
+
+
+def main() -> int:
+    args = parse_args()
+    repo_root = ensure_repo_root(Path(__file__))
+    policy = load_policy(repo_root)
+    goal_text = normalize(args.goal)
+    layers = detect_layers(goal_text, args.paths, policy["layers"])
+    high_risk_flags = detect_keyword_map(goal_text, args.paths, policy["keywords"]["high_risk"])
+    memory_signal = contains_any(goal_text, policy["keywords"]["memory_signal"])
+    journey_bias = contains_any(goal_text, policy["mode_policy"]["journey_bias_keywords"])
+
+    complexity, complexity_reason = score_complexity(goal_text, layers, args.paths, policy)
+    coupling, coupling_reason = score_coupling(goal_text, layers, policy)
+    risk, risk_reason = score_risk(goal_text, high_risk_flags, layers, policy)
+    ambiguity, ambiguity_reason = score_ambiguity(goal_text, args.paths, high_risk_flags, policy)
+    total = complexity + coupling + risk + ambiguity
+    mode, mode_reason = choose_mode(
+        args.mode,
+        total,
+        high_risk_flags,
+        memory_signal,
+        journey_bias,
+        policy,
+    )
+
+    date_prefix = datetime.now().strftime("%Y%m%d")
+    run_id = args.run_id or f"{date_prefix}-{slugify(goal_text)}"
+    board = {
+        "run_id": run_id,
+        "repo": repo_root.name,
+        "policy": {
+            "path": ".ai-work/intake-policy.json",
+            "version": policy["version"],
+        },
+        "truth_sources": policy["truth_sources"],
+        "main_goal": args.goal.strip(),
+        "mode": mode,
+        "score": {
+            "complexity": complexity,
+            "coupling": coupling,
+            "risk": risk,
+            "ambiguity": ambiguity,
+            "total": total,
+        },
+        "score_reasons": {
+            "complexity": complexity_reason,
+            "coupling": coupling_reason,
+            "risk": risk_reason,
+            "ambiguity": ambiguity_reason,
+            "mode": mode_reason,
+        },
+        "layers": layers,
+        "paths": args.paths,
+        "high_risk_flags": high_risk_flags,
+        "journey_bias": journey_bias,
+        "memory_signal": memory_signal,
+        "workers": build_workers(mode, policy),
+        "status": "intake",
+        "promotion_targets": ["repo-truth"],
+        "created_at": datetime.now().isoformat(timespec="seconds"),
+    }
+
+    if args.dry_run:
+        print(json.dumps(board, indent=2, ensure_ascii=False))
+        return 0
+
+    run_root = repo_root / ".ai-work" / "runs" / run_id
+    if run_root.exists():
+        print(f"Run already exists: {run_root}", file=sys.stderr)
+        return 1
+
+    briefs_root = run_root / "briefs"
+    returns_root = run_root / "returns"
+    briefs_root.mkdir(parents=True, exist_ok=False)
+    returns_root.mkdir(parents=True, exist_ok=False)
+
+    (run_root / "board.json").write_text(
+        json.dumps(board, indent=2, ensure_ascii=False) + "\n",
+        encoding="utf-8",
+    )
+    (run_root / "merge.md").write_text(
+        load_template(repo_root, ".ai-work/templates/merge.md"),
+        encoding="utf-8",
+    )
+    (run_root / "promotion.md").write_text(
+        load_template(repo_root, ".ai-work/templates/promotion.md"),
+        encoding="utf-8",
+    )
+
+    if mode in {"split-3", "split-4"} and not args.no_briefs:
+        split_3_roles = list(policy["mode_policy"]["split_3_roles"])
+        split_4_roles = list(policy["mode_policy"]["split_4_extra_roles"]) if mode == "split-4" else []
+        worker_return_template = load_template(repo_root, ".ai-work/templates/worker-return.md")
+        for role in [*split_3_roles, *split_4_roles]:
+            (briefs_root / f"{role}.md").write_text(
+                render_dispatch_brief(role, args.goal.strip(), layers, args.paths, high_risk_flags, policy),
+                encoding="utf-8",
+            )
+            (returns_root / f"{role}.md").write_text(
+                worker_return_template,
+                encoding="utf-8",
+            )
+
+    print(f"Created Adaptive Cell run: {run_root}")
+    print(f"Mode: {mode} ({mode_reason})")
+    print(
+        "Scores: "
+        f"complexity={complexity}, coupling={coupling}, risk={risk}, ambiguity={ambiguity}, total={total}"
+    )
+    if high_risk_flags:
+        print(f"High-risk flags: {', '.join(high_risk_flags)}")
+    if args.paths:
+        print(f"Paths: {', '.join(args.paths)}")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
