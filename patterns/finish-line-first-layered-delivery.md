@@ -42,6 +42,7 @@ permalink: engineering-playbook/patterns/finish-line-first-layered-delivery
 3. 当前目标层
 4. 完成标准
 5. 可选增强顺序
+6. 每个下一步的必要性与收益
 
 ## 适用场景
 
@@ -103,17 +104,39 @@ permalink: engineering-playbook/patterns/finish-line-first-layered-delivery
 
 不能把“未来增强建议”说成“当前仍未完成的缺口”。
 
-### Step 5: 用一页路线图固化
+### Step 5: 写清楚“为什么是这一步”
+
+一旦进入“后续增强”区，不能只写动作顺序。
+
+每个下一步都应该回答三件事：
+
+- **为什么现在做这一步**
+- **它解决的核心约束是什么**
+- **它带来的收益是什么**
+
+推荐从第一性原理来写，而不是从“顺手”或“技术上还能继续做”来写。
+
+最低要求至少写清：
+
+- `Why now`
+- `Expected benefit`
+
+如果是高成本/高风险升级，最好再补：
+
+- `If skipped now, what remains acceptable`
+
+### Step 6: 用一页路线图固化
 
 对项目内至少沉淀一页短文档，明确：
 
 - 当前已经完成到哪
 - 现阶段可以停在这里
 - 未来升级顺序
+- 每个升级顺序背后的必要性与收益
 
 这份文档的作用不是详细设计，而是建立边界感。
 
-### Step 6: 把执行入口接回日常流程
+### Step 7: 把执行入口接回日常流程
 
 如果这条线已经有可执行动作，再把它接入实际工作入口：
 
@@ -130,7 +153,7 @@ permalink: engineering-playbook/patterns/finish-line-first-layered-delivery
 
 ## 收尾汇报模板
 
-推荐用这四段来收尾：
+推荐至少用这五段来收尾：
 
 ```md
 ## Final Target
@@ -148,6 +171,10 @@ permalink: engineering-playbook/patterns/finish-line-first-layered-delivery
 ## Future Upgrades
 
 [后续如果升级，按什么顺序升级；这些属于增强项，不属于本次未完成项]
+
+## Why This Next
+
+[每个下一步为什么要做、解决什么约束、预期收益是什么]
 ```
 
 ## 反模式
@@ -155,6 +182,7 @@ permalink: engineering-playbook/patterns/finish-line-first-layered-delivery
 | 反模式 | 问题 | 正确做法 |
 |--------|------|----------|
 | 每次只说“下一步” | 用户不知道当前是否已完成 | 先说当前层是否完成 |
+| 只写步骤，不写收益 | 用户不知道为什么值得继续投资源 | 每个下一步都写 `Why now + Expected benefit` |
 | 一边做一边临时扩目标 | 范围失控 | 先写终局和分层 |
 | 把增强项说成缺口 | 永远没有完成感 | 明确区分“已完成”与“可升级” |
 | 只有策略没有执行入口 | 文档好看但不会被用 | 配 checklist / template / runbook |
@@ -168,6 +196,7 @@ permalink: engineering-playbook/patterns/finish-line-first-layered-delivery
 - [ ] 一份成熟度分层
 - [ ] 一个清楚的当前停线
 - [ ] 一份项目内的一页路线图
+- [ ] 每个下一步的必要性与收益说明
 - [ ] 至少一个进入日常流程的执行入口
 
 ## 例子
