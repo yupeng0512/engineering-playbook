@@ -52,7 +52,11 @@ Secondary chrome should use one of:
 - Do not auto-fetch side-panel history if the panel is closed.
 - Do not fetch notification lists at page mount just to render a bell.
 - If a secondary widget still needs early freshness, use delayed prefetch instead of first-paint fetch.
+- If secondary reads are delayed, add a stale-response guard so an older fetch cannot overwrite newer state after the user acts.
+- If delayed secondary reads become durable product surfaces, promote them into a server-side aggregated view instead of indefinitely increasing client-side delay knobs.
 - Keep retry ownership explicit so background widgets do not silently multiply request pressure.
+- Prefer a shared retry-aware API client for first-screen reads instead of scattered ad-hoc `fetch` calls with inconsistent headers and backoff behavior.
+- If a first-screen read still fails after retries, render a recoverable load-error state. Do not fall through to an empty state that falsely implies the user has no data.
 - Reserve rate-limit headroom for post-load user actions such as opening previews, approving drafts, or switching focus.
 
 ## Trade-off
