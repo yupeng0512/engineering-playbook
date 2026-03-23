@@ -77,6 +77,8 @@ Use a separate timeline model with fields such as:
 - The default drawer should open a recall inbox, not a notification feed.
 - The primary work surface should show a compact activity summary for the current object or session.
 - Product and customer views should show human-readable timelines, not raw traces.
+- Recall timestamps must come from real event time. Never fabricate "just now" from the existence of a route or a recall item.
+- Timeline badges must translate internal enums such as `needs_review` or `external_execution` into human-readable product language before rendering.
 - Raw logs, traces, replay, and provider evidence should stay behind an evidence drawer or expert layer.
 - Calm-running and done-for-now states should still be represented in the timeline, so the system feels active rather than silent.
 
@@ -84,5 +86,6 @@ Use a separate timeline model with fields such as:
 
 1. The recall inbox returns only actionable items.
 2. Success events do not increase the bell count.
-3. The work surface can explain current progress without exposing raw system logs.
-4. Evidence remains available, but only after drill-down.
+3. Recall freshness reflects real event timestamps, not UI-generated pseudo time.
+4. The work surface can explain current progress without exposing raw system logs or raw internal enums.
+5. Evidence remains available, but only after drill-down.
