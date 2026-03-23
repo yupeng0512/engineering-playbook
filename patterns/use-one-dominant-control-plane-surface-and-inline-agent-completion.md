@@ -152,6 +152,44 @@ and:
 
 - one true home work surface for the workflow
 
+## Next refinement after one home work surface
+
+Once the product already has:
+
+- one canonical home work surface
+- one current step at a time
+- a docked agent and inline confirm layer
+
+the next user-facing friction is usually no longer “where do I work?” It becomes:
+
+- after I finish this step, where should I go next?
+- do I stay on this object, switch to another, or stop for now?
+- how do I temporarily override the system when I have a resource constraint or a different priority?
+
+The fix is to model a continuous work session on top of the current-step system:
+
+- continuous work session:
+  - owns the current focus object
+  - owns the next focus preview
+  - decides whether to stay, hand off, or enter a calm/done-for-now state
+- operator override:
+  - is session-scoped, not a permanent policy mutation
+  - can pin a product or family
+  - can prioritize exceptions first
+  - can temporarily guard send capacity / send window
+- after each step:
+  - recompute the session
+  - keep the user on the same shell when possible
+  - only change the focused object, not the whole work surface
+
+This is how a product moves from:
+
+- one home work surface
+
+to:
+
+- one continuous operator work session
+
 ## Rules
 
 - Do not make a generic goal/workbench page the default landing surface if the system already knows the focused object.
@@ -162,6 +200,8 @@ and:
 - Auto-open the correct inline surface when the system already knows whether the user needs to type, confirm, or inspect.
 - If the current workflow still contains multiple sub-decisions, model them as an ordered readiness gate and expose only the current step; never make users choose sequence manually on the main path.
 - If two pages still both feel like “home” for the same workflow, pick one canonical home work surface and demote the other to launcher / summary only.
+- Once one canonical home work surface exists, make the system responsible for “what happens after this step” by introducing a continuous work session model.
+- Keep operator overrides session-scoped; never let a temporary prioritization or send-cap decision silently mutate durable bundle, memory, or product facts.
 - Keep expert routes for:
   - deep editing
   - diagnostics
