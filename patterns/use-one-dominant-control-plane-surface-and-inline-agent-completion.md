@@ -202,6 +202,10 @@ to:
 - If two pages still both feel like “home” for the same workflow, pick one canonical home work surface and demote the other to launcher / summary only.
 - Once one canonical home work surface exists, make the system responsible for “what happens after this step” by introducing a continuous work session model.
 - Keep operator overrides session-scoped; never let a temporary prioritization or send-cap decision silently mutate durable bundle, memory, or product facts.
+- If the UI exposes a session-scoped resource guard such as a send cap or send window, that guard must either:
+  - directly affect runtime sequencing
+  - or be rejected at write-time
+  Never keep “saved but behaviorally inert” operator knobs in the live control plane.
 - Keep expert routes for:
   - deep editing
   - diagnostics
