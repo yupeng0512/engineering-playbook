@@ -76,6 +76,40 @@ and:
 
 - a true “follow the system” experience where the page already opens the correct rail for the current step
 
+## Next refinement
+
+Once the product already has:
+
+- one dominant surface
+- one visible primary CTA
+- auto-open agent / confirm rails
+
+the next failure mode is usually not “too many pages” anymore. It becomes:
+
+- several different sub-decisions still appear to be available at the same time
+- the user still has to decide the order
+
+The fix is to introduce an explicit readiness-gate model and let the system expose only one current step at a time:
+
+- current step:
+  - the only thing the user should do now
+- next steps:
+  - shown only as “what happens after this,” not as competing buttons
+- agent panel:
+  - handles input / explanation steps
+- confirm sheet:
+  - handles approval / reject boundaries
+- automatic continuation:
+  - after the current step completes, recompute the gate and open the next inline surface on the same page
+
+This is how a product moves from:
+
+- one strong page
+
+to:
+
+- one true decision surface
+
 ## Rules
 
 - Do not make a generic goal/workbench page the default landing surface if the system already knows the focused object.
@@ -84,6 +118,7 @@ and:
 - Use confirm sheets or modals for explicit boundary approval.
 - Keep only one primary CTA visible by default; secondary actions should explain or open utility, not compete.
 - Auto-open the correct inline surface when the system already knows whether the user needs to type, confirm, or inspect.
+- If the current workflow still contains multiple sub-decisions, model them as an ordered readiness gate and expose only the current step; never make users choose sequence manually on the main path.
 - Keep expert routes for:
   - deep editing
   - diagnostics
