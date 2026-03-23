@@ -110,6 +110,48 @@ to:
 
 - one true decision surface
 
+## Next refinement after one decision surface
+
+Once the product already exposes:
+
+- one current step
+- one primary CTA
+- sequenced agent / confirm rails
+
+the next confusion often comes from a different layer:
+
+- two different pages still both feel like the “home” for the same workflow
+
+Typical example:
+
+- a dashboard or launcher page still opens the same agent flow inline
+- while the object control-plane page also owns the same step sequence
+
+The fix is to declare one canonical home work surface:
+
+- launcher / dashboard:
+  - only summarizes what the system is doing
+  - only hands off to the current object
+- home work surface:
+  - owns the current step
+  - owns the docked agent state
+  - owns inline confirm flows
+  - owns auto-open behavior
+
+Then make landing rules explicit:
+
+- if the system already knows the current focus object and current step:
+  - land directly on the canonical work surface after login
+- only stay on the dashboard when there is no concrete current step yet
+
+This is the difference between:
+
+- one decision surface inside the workflow
+
+and:
+
+- one true home work surface for the workflow
+
 ## Rules
 
 - Do not make a generic goal/workbench page the default landing surface if the system already knows the focused object.
@@ -119,6 +161,7 @@ to:
 - Keep only one primary CTA visible by default; secondary actions should explain or open utility, not compete.
 - Auto-open the correct inline surface when the system already knows whether the user needs to type, confirm, or inspect.
 - If the current workflow still contains multiple sub-decisions, model them as an ordered readiness gate and expose only the current step; never make users choose sequence manually on the main path.
+- If two pages still both feel like “home” for the same workflow, pick one canonical home work surface and demote the other to launcher / summary only.
 - Keep expert routes for:
   - deep editing
   - diagnostics
