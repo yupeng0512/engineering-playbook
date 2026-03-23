@@ -58,12 +58,32 @@ Then keep the default routing rules simple:
 - inline confirm UI:
   - handles approval / confirm / reject boundaries
 
+## Refinement
+
+Once a product has already converged on one dominant surface, the next refinement is to remove the remaining ambiguity from that surface:
+
+- keep exactly one primary CTA in the visible action rail
+- auto-open the native agent when the current step needs text input, explanation, or a minimal interview
+- auto-open an inline sheet/modal when the current step is a structured boundary confirmation
+- demote utility actions such as import, create, and advanced mode into a utility drawer or sheet
+- demote the old goal/explainer page into a drawer, support rail, or compatibility handoff instead of keeping it as a parallel main page
+
+This is the difference between:
+
+- a strong control-plane page with several valid things to click
+
+and:
+
+- a true “follow the system” experience where the page already opens the correct rail for the current step
+
 ## Rules
 
 - Do not make a generic goal/workbench page the default landing surface if the system already knows the focused object.
 - Do not route to a second page just to collect a few missing inputs.
 - Use the native agent for free-text answers and minimal interviews.
 - Use confirm sheets or modals for explicit boundary approval.
+- Keep only one primary CTA visible by default; secondary actions should explain or open utility, not compete.
+- Auto-open the correct inline surface when the system already knows whether the user needs to type, confirm, or inspect.
 - Keep expert routes for:
   - deep editing
   - diagnostics
