@@ -70,6 +70,8 @@ Reserve the full review payload for the canonical review surface, for example:
 - Recall items tied to review work should route directly to the canonical review surface.
 - The summary surface should expose one clear CTA such as `Open thread review`, not a second set of draft-review controls.
 - Avoid naming both surfaces with the same "timeline" semantics when they operate at different scopes.
+- When the selected object changes, clear stale preview state first and show a short loading state rather than briefly rendering the previous object's preview.
+- Summary-surface preview and recall requests should carry the active locale; otherwise a localized summary surface can quietly regress into default-language copy even when the canonical review surface is correct.
 
 ## Validation
 
