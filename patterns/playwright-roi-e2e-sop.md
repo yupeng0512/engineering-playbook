@@ -188,6 +188,27 @@ If the UI is empty by default, decide explicitly:
 
 Do not let tests silently depend on whatever data happened to be present.
 
+### Add one noisy real-data walkthrough before sign-off
+
+Seeded smoke tests are necessary, but they are not enough when the product already has:
+
+- legacy records
+- duplicate objects
+- partially migrated state
+- real user content
+
+Before sign-off on a user-facing flow, add one lightweight walkthrough against a real account or a noisy fixture set and look for:
+
+- duplicate cards or duplicated entities
+- stale previews from a different object
+- over-verbose or repetitive copy
+- hidden polling / request storms / 429s
+- mismatches between canonical surfaces and summary surfaces
+
+The goal is not to replace deterministic smokes.
+
+The goal is to catch the class of regressions that only appear once the UI meets real, messy product state.
+
 ## Failure triage loop
 
 When a Playwright test fails:
