@@ -71,6 +71,23 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 这样既有自动订阅更新，也保住了审计和回滚边界。
 
+### 5. sync 之前先校验，并拒绝静默覆盖
+
+受控 rollout 最怕两类“看起来同步成功，实际上偷偷错了”的问题：
+
+- channel 里重复引用同一个 `install_name`
+- manifest 重名或 vendor path 缺失时，被后续步骤静默覆盖/半安装
+
+所以同步脚本本身也应该：
+
+- 先跑 registry 校验
+- 拒绝 duplicate manifest install name
+- 拒绝 channel duplicate install name
+- 在真正删/装技能前就 fail-fast 检查 source/vendor path
+
+不要把这些检查只留给 CI。  
+本机同步同样应该有最小自保护。
+
 ### 5. 本机同步脚本默认采用 additive sync
 
 同步时只安装/更新 registry 管理的 skills，不删除本机其它未托管 skill。
@@ -103,4 +120,4 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 ## 来源
 
-TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。
+TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界。
