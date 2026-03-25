@@ -60,6 +60,14 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 默认环境只消费 `stable`。  
 新 skill、新规则、新上游 ref 先放 `canary`，验证稳定后再提升。
 
+对于**外部来源的 skill**，更稳的默认值通常是：
+
+- 先放 `experimental`
+- 先看它是否和现有工作守则冲突
+- 再决定是否提升到 `canary`
+
+不要把“外部 skill 很有道理”直接等同于“可以进入默认环境”。
+
 ### 4. 自动订阅更新，但不要自动直达生产
 
 最稳的做法不是自动安装，而是：
