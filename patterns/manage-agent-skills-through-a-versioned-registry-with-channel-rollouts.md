@@ -147,6 +147,23 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 不要把“值得试用”直接等同于“值得成为 stable 默认基线”。
 
+对多模块仓库，再补一条很重要的实施细节：
+
+- 像 `Serena` 这类依赖语言服务器和包元数据的工具，**不要默认只在 monorepo 根目录激活**
+- 如果真正的语言模块根目录在子目录里（例如 `api/go.mod`、`web/package.json`）
+- 更稳的试点方式通常是：
+  - 先按**语言模块根目录**激活
+  - 先验证 symbol overview / package metadata / references 是否真的可用
+  - 再决定是否值得扩展到更大的仓库根范围
+
+否则很容易出现一种假阳性状态：
+
+- 工具安装成功了
+- 进程也能启动
+- 但真正最值钱的语义能力（引用追踪、包元数据、跨文件理解）并没有稳定可用
+
+把 pilot 边界收小，通常比“先宣布整仓可用”更专业。
+
 ### 9. 把高 ROI 本地 CLI 也纳入 manifest 治理，而不是装完就忘
 
 除了 skills、MCP、repo eval 工具之外，团队还经常会遇到一类工具：
