@@ -105,6 +105,27 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 - 降低迁移成本
 - 先试运行 registry，不强制一次性接管所有历史本地技能
 
+### 7. 把关键环境集成也做成受控资产，但不要和 skill rollout 混成一锅
+
+像 `Context7` 这类 Codex MCP 集成，真正的风险往往不是“有没有装”，而是：
+
+- 只存在于某个人本机 `config.toml`
+- 版本升级没有订阅
+- 谁改过 command/args 说不清
+
+更稳的做法通常是：
+
+- 继续让 `stable/canary/experimental` 只治理 **skills**
+- 另外用 `integrations-manifests/` + `config-snippets/` 追踪关键环境集成
+- 给这些集成记录：
+  - source repo
+  - package name / pinned version
+  - config snippet
+  - 本机验证脚本
+- 用 Renovate 订阅 npm/tag 更新，但不要让 `sync-to-codex.sh` 直接修改用户的 MCP/tooling 配置
+
+这样既能把关键集成纳入审计和自动订阅更新，又不会让一个“技能同步脚本”突然开始改环境层配置。
+
 ## 为什么有效
 
 - 把“谁都能随手装点什么”变成“有记录、有 diff、有渠道的受控变更”
@@ -128,4 +149,4 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 ## 来源
 
-TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界。
+TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界，并把 `Context7` 这类关键 Codex MCP 集成纳入了独立 manifest/snippet 治理，而不把它们粗暴塞进 skill rollout 通道。
