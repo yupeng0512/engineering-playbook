@@ -147,6 +147,38 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 不要把“值得试用”直接等同于“值得成为 stable 默认基线”。
 
+### 9. 把高 ROI 本地 CLI 也纳入 manifest 治理，而不是装完就忘
+
+除了 skills、MCP、repo eval 工具之外，团队还经常会遇到一类工具：
+
+- `ast-grep`
+- `semgrep`
+- 结构化 refactor CLI
+- 静态规则扫描 CLI
+
+它们不属于 skill，也不是 MCP server，但一旦开始依赖，同样会出现：
+
+- 某台机器装了，另一台没装
+- 版本漂移
+- 安装方式混乱
+- 一段时间后根本不知道当前在用哪个版本
+
+更稳的做法通常是：
+
+- 在 registry 里给它们单独建 `local_cli_tool` manifest
+- 记录：
+  - source repo
+  - package name
+  - pinned version
+  - rollout stage
+  - executable name
+  - version args
+- 用本机校验脚本检查：
+  - 命令是否存在
+  - 输出版本是否包含 pinned version
+
+这样可以把“高 ROI 本地 CLI”也纳入可审计治理，而不是每次都重新口头确认。
+
 ## 为什么有效
 
 - 把“谁都能随手装点什么”变成“有记录、有 diff、有渠道的受控变更”
@@ -170,4 +202,4 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 ## 来源
 
-TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界，并把 `Context7`、`Serena` 这类关键 Codex MCP 集成纳入了独立 manifest/snippet 治理，而不把它们粗暴塞进 skill rollout 通道。
+TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界，并把 `Context7`、`Serena` 这类关键 Codex MCP 集成，以及 `ast-grep`、`Semgrep` 这类高 ROI 本地 CLI 工具，一起纳入了独立 manifest/snippet/verification 治理，而不把它们粗暴塞进 skill rollout 通道。
