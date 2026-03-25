@@ -219,4 +219,4 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 ## 来源
 
-TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界，并把 `Context7`、`Serena` 这类关键 Codex MCP 集成，以及 `ast-grep`、`Semgrep` 这类高 ROI 本地 CLI 工具，一起纳入了独立 manifest/snippet/verification 治理，而不把它们粗暴塞进 skill rollout 通道。
+TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界，并把 `Context7`、`Serena` 这类关键 Codex MCP 集成，以及 `ast-grep`、`Semgrep` 这类高 ROI 本地 CLI 工具，一起纳入了独立 manifest/snippet/verification 治理，而不把它们粗暴塞进 skill rollout 通道。进一步的 Serena pilot 还证明：对这类语义型 MCP，不仅要验证 config snippet，还要把 `gopls` 这类本地语言服务器前置依赖显式声明进 manifest，并在 live verification 阶段 fail-fast 检查。
