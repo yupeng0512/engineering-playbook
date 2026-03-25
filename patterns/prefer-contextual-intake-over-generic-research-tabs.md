@@ -94,6 +94,42 @@ canonical intake UI 打开时，至少要绑定：
 
 这样用户和后续 Agent 都知道这条结论从哪来。
 
+### 6. expert route deep link 也要恢复上下文
+
+如果默认主路径允许用户从 contextual intake 跳去 expert workspace：
+
+- `product_id`
+- `opportunity_id`
+- `source_name`
+- 其他 scope 参数
+
+这些 deep-link 参数不能只是“挂在 URL 上”。
+
+expert route 本身也必须在空白状态下恢复这些参数，并继续把它们带进后续 prepare / analyze 请求。否则就会出现：
+
+- 打开了对的 expert 页
+- 但用户还是要重新选择对象
+- 或来源名/当前 scope 丢失
+
+这会让 contextual intake 合同在最后一跳断掉。
+
+### 7. proposal 的 provenance 要按真实 delta 过滤
+
+不要把整份 artifact 的 grouped provenance 原样透传进对象级 review proposal。
+
+更稳的做法是：
+
+1. 前端传 field candidates / extracted evidence
+2. backend 先计算真正的字段 delta
+3. provenance 只保留这次实际准备写入的字段证据
+
+否则 review card 会出现：
+
+- 这次没打算写入的字段
+- 却也带着“已确认来源证据”
+
+会削弱 review-before-write 的可信度。
+
 ## 为什么有效
 
 - 用户不需要理解系统内部能力层
