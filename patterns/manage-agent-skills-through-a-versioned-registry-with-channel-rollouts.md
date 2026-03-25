@@ -126,6 +126,27 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 这样既能把关键集成纳入审计和自动订阅更新，又不会让一个“技能同步脚本”突然开始改环境层配置。
 
+### 8. 语义型 MCP 工具先按 experimental pilot 治理
+
+像 `Serena` 这类语义检索/符号级编辑工具，价值通常很高，但风险也和普通文档型 MCP 不一样：
+
+- 它们更深地介入代码理解与编辑路径
+- 配置参数更容易影响日常工作节奏
+- 很容易因为“看起来很强”就被过早放进默认环境
+
+更稳的做法通常是：
+
+- 先把它们建模为 `codex_mcp_server` 集成
+- 用明确的 pinned ref 和 versioned config snippet 管理
+- rollout stage 先标成 `experimental`
+- 先验证：
+  - 能启动
+  - 能和现有 stable 集成共存
+  - 不会破坏当前主工作流
+- 观察稳定后，再决定是否提升
+
+不要把“值得试用”直接等同于“值得成为 stable 默认基线”。
+
 ## 为什么有效
 
 - 把“谁都能随手装点什么”变成“有记录、有 diff、有渠道的受控变更”
@@ -149,4 +170,4 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 
 ## 来源
 
-TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界，并把 `Context7` 这类关键 Codex MCP 集成纳入了独立 manifest/snippet 治理，而不把它们粗暴塞进 skill rollout 通道。
+TradeRadar `Phase 28AU`：在没有成熟 Codex-native skill manager 的前提下，用独立 `agent-skills-registry` + Renovate + CI + stable/canary/experimental 渠道，为 Codex 工作环境补齐了统一治理、自动订阅更新和安全 rollout。后续 review follow-up 进一步补上了 sync 前校验、duplicate 检测与 fail-fast 安装边界，并把 `Context7`、`Serena` 这类关键 Codex MCP 集成纳入了独立 manifest/snippet 治理，而不把它们粗暴塞进 skill rollout 通道。
