@@ -88,7 +88,7 @@ permalink: engineering-playbook/patterns/manage-agent-skills-through-a-versioned
 不要把这些检查只留给 CI。  
 本机同步同样应该有最小自保护。
 
-### 5. 本机同步脚本默认采用 additive sync
+### 6. 本机同步脚本默认采用 additive sync
 
 同步时只安装/更新 registry 管理的 skills，不删除本机其它未托管 skill。
 
