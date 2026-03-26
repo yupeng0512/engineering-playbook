@@ -63,6 +63,19 @@ It is:
 
 - “Who is safe and worthwhile to move forward right now?”
 
+Keep the operator-facing reason specific.
+
+Do not collapse:
+
+- missing route
+- missing buyer-role or profile evidence
+- missing product context
+- weak signal quality
+
+into one generic “needs more context” summary.
+
+If those reasons collapse into a single catch-all label, the queue may still be technically correct, but the operator will stop trusting why items were held or excluded.
+
 ## Validation
 
 - service tests prove queue-admission state is derived deterministically
