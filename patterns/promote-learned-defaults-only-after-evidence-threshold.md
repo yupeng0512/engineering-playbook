@@ -40,6 +40,8 @@ Keep learned output in four buckets:
 
 Only the last bucket should be eligible to become the new default, and only for low-risk fields.
 
+Promotion should also use the strongest validated slice, not whichever market or intent happens to appear first in a sorted list.
+
 ## Recommended contract
 
 Every learned recommendation should carry:
@@ -76,6 +78,12 @@ The default surface should answer:
 
 Do not force operators to reverse-engineer the distinction from raw metrics.
 
+When a promoted default is market-specific or intent-specific, the system should also explain why this slice won:
+
+- strongest repeated wins
+- strongest qualified-reply density
+- no stronger conflicting slice
+
 ## Validation
 
 - service tests prove promotion eligibility is threshold-driven
@@ -91,3 +99,10 @@ In `Phase 28BA`, `TradeRadar` introduced:
 - `recommendation` vs `promoted_default` apply modes
 
 This let the product keep a recommendation-first learning loop while still allowing repeated, low-risk patterns to become reusable defaults once they crossed a clear evidence threshold.
+
+In `Phase 28BE / 28BF / 28BG`, `TradeRadar` had to tighten the rule further:
+
+- market-specific defaults must pick the strongest winning market, not the first market label
+- low-risk reply defaults must pick the strongest low-risk intent, not the most generic high-volume intent
+
+Otherwise the system still “promotes by evidence threshold”, but silently promotes the wrong slice.
