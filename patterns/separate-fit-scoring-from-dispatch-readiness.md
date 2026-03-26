@@ -45,6 +45,15 @@ Model them separately:
   - reason
   - missing context
 
+If the system also needs a bounded live-send queue, add a third gate instead of overloading readiness:
+
+- `DispatchNowDecision`
+  - `dispatch_now`
+  - `hold_for_route`
+  - `hold_for_context`
+  - `exclude`
+  - budget / route-confidence reason
+
 ## Operator-facing rendering
 
 In the default surface, show:
@@ -62,6 +71,10 @@ The operator question is not:
 It is:
 
 - “Who is safe and worthwhile to move forward right now?”
+
+And later, if dispatch is bounded:
+
+- “Who is actually safe to send to right now?”
 
 Keep the operator-facing reason specific.
 
@@ -91,3 +104,12 @@ In `Phase 28AY`, `TradeRadar` kept `fit_score` but added an explicit `DispatchRe
 - `excluded`
 
 This prevented signal-qualified but context-thin prospects from entering first-touch preparation just because their profile looked promising.
+
+In `Phase 28BE`, `TradeRadar` extended the pattern again:
+
+- `fit_score`
+- `dispatch_readiness`
+- `contact_route_confidence`
+- `dispatch_now_decision`
+
+This kept “good candidate”, “ready candidate”, and “safe-to-send candidate” as three separate layers instead of collapsing them into one misleading score.
