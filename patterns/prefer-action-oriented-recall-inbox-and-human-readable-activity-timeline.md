@@ -82,6 +82,7 @@ Use a separate timeline model with fields such as:
 - Default execution surfaces must not treat backend freeform English summaries as safe UI copy by default. Operator-facing automation language should still be derived from frontend-owned i18n/product-language mappings, or from tightly bounded label enums.
 - Fallback behavior must obey the same rule: if a translation or label lookup misses, fall back to safe product-language copy, never to a raw enum or a quick `replace("_", " ")`.
 - When the backend returns explanatory facts or evidence strings, separate the stable signal from the rendered sentence. Pass kinds, statuses, field paths, and counts forward; let the frontend compose the final operator-facing sentence.
+- The same rule applies to missing-item or requirement lists. Pass stable keys such as `quote_basis` or `payment_terms`, not already-rendered English labels, so the frontend can localize and normalize them consistently.
 - Recall timestamps must come from real event time. Never fabricate "just now" from the existence of a route or a recall item.
 - Timeline badges must translate internal enums such as `needs_review` or `external_execution` into human-readable product language before rendering.
 - Raw logs, traces, replay, and provider evidence should stay behind an evidence drawer or expert layer.
