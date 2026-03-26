@@ -79,7 +79,9 @@ Use a separate timeline model with fields such as:
 - Product and customer views should show human-readable timelines, not raw traces.
 - Default execution surfaces must not directly render machine terms such as `first-touch`, `follow-up`, `buyer reply`, `step-*`, or other raw workflow-engine tokens.
 - Keep a small product-language mapping layer between machine codes and UI copy; expert/debug labels may survive in evidence layers, but default surfaces should speak in user task language.
+- Default execution surfaces must not treat backend freeform English summaries as safe UI copy by default. Operator-facing automation language should still be derived from frontend-owned i18n/product-language mappings, or from tightly bounded label enums.
 - Fallback behavior must obey the same rule: if a translation or label lookup misses, fall back to safe product-language copy, never to a raw enum or a quick `replace("_", " ")`.
+- When the backend returns explanatory facts or evidence strings, separate the stable signal from the rendered sentence. Pass kinds, statuses, field paths, and counts forward; let the frontend compose the final operator-facing sentence.
 - Recall timestamps must come from real event time. Never fabricate "just now" from the existence of a route or a recall item.
 - Timeline badges must translate internal enums such as `needs_review` or `external_execution` into human-readable product language before rendering.
 - Raw logs, traces, replay, and provider evidence should stay behind an evidence drawer or expert layer.
@@ -92,3 +94,4 @@ Use a separate timeline model with fields such as:
 3. Recall freshness reflects real event timestamps, not UI-generated pseudo time.
 4. The work surface can explain current progress without exposing raw system logs or raw internal enums.
 5. Evidence remains available, but only after drill-down.
+6. Backend explanatory English should not leak directly into operator-facing default surfaces unless it is already a bounded, localized label contract.
