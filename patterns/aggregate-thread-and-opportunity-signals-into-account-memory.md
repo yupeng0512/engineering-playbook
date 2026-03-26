@@ -68,6 +68,15 @@ Do not turn the account view into a giant CRM surface.
 - UI copy uses stable localized status / hold / packet keys
 - default operator surface reduces “mental stitching” across contacts and threads
 
+## Implementation guardrails
+
+- Do not derive account-level truth only from a small “recent threads” sample.
+  - Recent threads are good for latest reply context.
+  - Active opportunity state should be queried explicitly, then merged back into the summary input.
+- Do not render account-level intelligence directly from list-row snapshots.
+  - A customer list item is usually a lightweight object.
+  - Detail drawers should rehydrate the canonical detail object before showing account memory or deal-progress intelligence.
+
 ## TradeRadar example
 
 In `Phase 28BK`, `TradeRadar` introduced:
@@ -77,3 +86,8 @@ In `Phase 28BK`, `TradeRadar` introduced:
 - `AccountOpportunityLink`
 
 This let `Customers` answer the account-level question first, while keeping `Inbox` and `Work` focused on thread truth and dispatch decisions.
+
+In the review follow-up, `TradeRadar` also tightened two important edges:
+
+- account memory now merges `recent threads` with an explicit `latest active opportunity thread` lookup
+- the `Customers` detail drawer now hydrates the full customer detail record instead of trusting the list snapshot
