@@ -189,6 +189,22 @@ FastAPI → React Dashboard / MCP Server
 - **解决方案**: 统一返回 `skipped / failed / partial / sent` 四态，并让 API/调度日志按真实结果展示
 - **预防建议**: 外部副作用型服务不能只回答“有没有尝试”，必须回答“有没有成功”
 
+#### 坑 8: AsyncSession 不能被 `asyncio.gather` 共享着并发查库
+
+- **影响程度**: 高
+- **现象**: dashboard 聚合接口本地单测正常，但运行态一打就 `500`，报错为 `InvalidRequestError: concurrent operations are not permitted`
+- **根因**: 在同一个 request-scoped `AsyncSession` 上并发执行多个 `session.execute(...)`
+- **解决方案**: 同一 session 内保持顺序查询；如果确实要并发，就为重型查询开 isolated session，或者直接把多个窗口/榜单的重算合并成一次批处理
+- **预防建议**: FastAPI + SQLAlchemy async 下，`asyncio.gather` 不是默认优化手段；先确认并发的是“纯 Python / 纯网络”，不是同一个 ORM session
+
+#### 坑 9: Pydantic v2 不会自动把 dataclass 响应项“猜对”
+
+- **影响程度**: 中
+- **现象**: API service 返回的是 dataclass 列表，看起来字段都齐，但 `response_model` 组装时仍然 500
+- **根因**: Pydantic v2 对 dataclass / ORM / 普通 dict 的接收更严格，不能再默认依赖隐式 from-attributes 行为
+- **解决方案**: 在 route 层显式映射为响应模型，或使用明确的 `model_validate(..., from_attributes=True)` 策略
+- **预防建议**: 只要接口层声明了 `response_model`，就把“输出对象长什么样”当成契约，不要依赖框架帮你猜
+
 ### 决策失误
 
 #### 失误 1: 初始选择纯 GitHub API
@@ -209,6 +225,9 @@ FastAPI → React Dashboard / MCP Server
 - **Repository 模式**: `src/storage/repository.py` — SQLAlchemy 2.0 async 数据仓库
 - **文件缓存**: `src/services/query_cache.py` — MD5 key + TTL + JSONL，零依赖
 - **成本监控**: `src/services/monitoring_service.py` — 云服务调用成本跟踪
+- **前端轻量 GET 缓存 + stale-while-refresh UI**: 适合 React Router 单页应用。路由切换回来时优先显示内存缓存，后台再轻量刷新，比“每次 remount 都全屏 spinner”更稳更快
+- **窗口级 metric state 共享缓存**: 对 `Head / Breakout / Newcomer` 这类“同候选集、不同排序器”的榜单，先缓存窗口级特征，再派生榜单页，比每个 board 各自重扫历史数据更高 ROI
+- **批量窗口计算**: 当 `7d / 30d` 这类窗口共用同一份历史表时，优先一次加载 `repositories + star_history`，再在内存里派生多套窗口指标；这通常比并发跑两次 ORM 查询更稳
 
 ### 配置模板
 

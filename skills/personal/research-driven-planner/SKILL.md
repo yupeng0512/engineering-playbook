@@ -165,6 +165,7 @@ brainstorming (WHAT) → research-driven-planner (HOW) → writing-plans (EXECUT
 - 标注每个组件的来源（开源项目名 / 商业产品名 / 自建）
 - 标注关键接口和数据流
 - 标注部署方式（Docker / Cloud / 本地）
+- 对 1-2 个最复杂/最核心的子系统，画出独立的详细交互图（如数据流、状态机、分配逻辑），揭示高层架构图无法表达的内部行为
 
 **ADR 速记格式**：
 ```
@@ -229,6 +230,7 @@ brainstorming (WHAT) → research-driven-planner (HOW) → writing-plans (EXECUT
 - [ ] 提取了共识模式和反模式
 - [ ] 每个子模块有明确的 Build/Buy 决策和理由
 - [ ] 架构设计标注了每个组件的来源
+- [ ] 最复杂的子系统有独立的详细交互图
 - [ ] 关键决策有 ADR 记录
 - [ ] 落地路径 Phase 1 是 MVP，聚焦验证而非大而全
 - [ ] 用户确认了方案设计

@@ -1,3 +1,9 @@
+---
+title: search-strategies
+type: note
+permalink: engineering-playbook/skills/personal/research-driven-planner/references/search-strategies
+---
+
 # 搜索策略参考
 
 > 本文档定义 Landscape Scan 阶段的搜索方法、关键词模板和信源层级。

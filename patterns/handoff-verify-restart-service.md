@@ -40,6 +40,7 @@ permalink: engineering-playbook/patterns/handoff-verify-restart-service
 - [ ] 本次修改是否影响运行中的服务（前端/API/worker）？
 - [ ] 若是，该服务是否通过镜像运行且无源码挂载？→ 执行 build + up -d --force-recreate
 - [ ] 若仅改 .env → 执行 up -d --force-recreate，勿用 restart
+- [ ] 若新增的是前端新路由 / 新页面，必要时进入容器核对构建产物（例如 Next standalone 的 `app-paths-manifest.json`）是否已经包含新路由，避免“宿主机 build 是新的，运行中镜像还是旧的”这种假修复
 
 ## 参考
 
